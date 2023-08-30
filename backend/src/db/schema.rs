@@ -16,8 +16,6 @@ diesel::table! {
         id -> Uuid,
         #[max_length = 50]
         username -> Varchar,
-        #[max_length = 50]
-        email -> Varchar,
         #[max_length = 256]
         password -> Varchar,
         created_at -> Timestamptz,
@@ -27,7 +25,4 @@ diesel::table! {
 
 diesel::joinable!(posts -> users (user_id));
 
-diesel::allow_tables_to_appear_in_same_query!(
-    posts,
-    users,
-);
+diesel::allow_tables_to_appear_in_same_query!(posts, users,);
