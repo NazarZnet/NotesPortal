@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  pg:
+    image: postgres:latest
+    container_name: database
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DBNAME}
+    ports:
+      - '${POSTGRES_PORT}:${POSTGRES_PORT}'
+    volumes:
+      - db:/var/lib/postgresql/data
+    command: -p ${POSTGRES_PORT}
+
+    
+volumes:
+  db:
+    driver: local

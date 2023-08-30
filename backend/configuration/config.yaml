@@ -1,0 +1,6 @@
+database:
+  host: "127.0.0.1"
+  port: 5600
+  username: "admin"
+  password: "root"
+  database_name: "blogportal"
