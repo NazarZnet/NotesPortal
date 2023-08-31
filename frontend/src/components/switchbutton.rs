@@ -12,7 +12,7 @@ pub struct Props {
 }
 
 #[function_component(SwitchButton)]
-pub fn secure(props: &Props) -> Html {
+pub fn switch_button(props: &Props) -> Html {
     let navigator = use_navigator().unwrap();
 
     let route=props.route.clone();

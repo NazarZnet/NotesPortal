@@ -2,7 +2,7 @@ use yew::prelude::*;
 use yew_router::prelude::*;
 
 use crate::components::switchbutton::SwitchButton;
-
+use crate::components::authorizationform::AuthorizationForm;
 #[derive(Clone, Routable, PartialEq)]
 pub enum Route {
     #[at("/")]
@@ -32,6 +32,7 @@ pub fn switch(routes: Route) -> Html {
             html! { 
                 <div>
                     <h1>{ "Sign Up" }</h1>
+                    <AuthorizationForm title={"Create new account"} btn_value={"SignUp"} uri={"signup"}/>
                     <SwitchButton text={"Log In"} route={Route::LogIn}/> 
                 </div>
             }
@@ -40,6 +41,7 @@ pub fn switch(routes: Route) -> Html {
             html! { 
                 <div>
                     <h1>{ "LogIn" }</h1>
+                    <AuthorizationForm title={"Log to your account"} btn_value={"LogIn"} uri={"login"}/>
                     <SwitchButton text={"Posts"} route={Route::Posts}/> 
                 </div>
             }
