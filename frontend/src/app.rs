@@ -1,10 +1,13 @@
 use yew::prelude::*;
+use yew_router::prelude::*;
+
+use crate::routes::{Route,switch};
 
 #[function_component(App)]
 pub fn app() -> Html {
     html! {
-        <main>
-            <h1>{ "Welcome to mini blog! Sign up to make you note!" }</h1>
-        </main>
+        <BrowserRouter>
+            <Switch<Route> render={switch} /> 
+        </BrowserRouter>
     }
 }
