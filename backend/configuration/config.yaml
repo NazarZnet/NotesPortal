@@ -4,3 +4,12 @@ database:
   username: "admin"
   password: "root"
   database_name: "blogportal"
+auth:
+  access:
+    key: "00f2b1bee52ca5ffa82b615d0bc481a493f25bde1e6e88783e81c3e824e0f1d3"
+    exp: 15
+    maxage: 15
+  refresh:
+    key: "ffd10c82300f3c93c5801935fecac126d6d192dc1dcfe6f11bf0dc7e8dfa14e0"
+    exp: 60
+    maxage: 60

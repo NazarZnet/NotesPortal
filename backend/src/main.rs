@@ -1,20 +1,17 @@
-use actix_web::{get,web, App, HttpResponse, HttpServer, Responder, HttpRequest};
-use tracing::instrument;
-
-use crate::{app::AppState, db::NewUser};
-
-mod db;
 mod app;
-mod logging;
+mod auth;
+mod db;
 mod errors;
+mod logging;
+mod schema;
 
+use actix_web::{get, middleware::Logger, web, App, HttpRequest, HttpResponse, HttpServer};
+use tracing::instrument;
 
 #[get("/")]
 #[instrument(skip_all,name="Index page",fields(uri = %req.uri(), method= %req.method()))]
-pub async fn index(req: HttpRequest) -> Result<HttpResponse,errors::Error> {
-    Ok(
-        HttpResponse::Ok().body("Helo")
-    )
+pub async fn index(req: HttpRequest) -> Result<HttpResponse, errors::Error> {
+    Ok(HttpResponse::Ok().body("Helo"))
 }
 
 #[actix_web::main]
@@ -29,13 +26,15 @@ async fn main() -> std::io::Result<()> {
         .create_app_state()
         .expect("Failed to establish database connection");
 
-    let app_state=web::Data::new(app_state);
+    let app_state = web::Data::new(app_state);
 
     tracing::info!("Server started on 127.0.0.1:8000");
     HttpServer::new(move || {
         App::new()
             .app_data(app_state.clone())
+            .wrap(Logger::default())
             .service(index)
+            .configure(auth::config)
     })
     .bind(("127.0.0.1", 8000))?
     .run()
