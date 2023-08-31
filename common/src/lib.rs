@@ -1,5 +1,4 @@
-pub mod errors;
-
+use std::default;
 
 use serde::{Serialize,Deserialize};
 use uuid::Uuid;
@@ -20,8 +19,35 @@ pub struct LoginResponse{
     pub refresh:String
 }
 
-#[derive(Debug,Serialize,Deserialize)]
+#[derive(Debug, Serialize,Deserialize,PartialEq)]
+pub enum Auth {
+    Authentication,
+    Authorization,
+}
+
+#[derive(Debug, Serialize,Deserialize,Default,PartialEq)]
+pub enum ErrorTypes {
+    ValidationError,
+    DbError,
+    Auth(Auth),
+    JwtError,
+    #[default]
+    RequestError,
+}
+
+#[derive(Debug,Serialize,Deserialize,Default)]
 pub struct ErrorResponse{
     pub cause: Option<String>,
-    pub message: Option<String>
+    pub message: Option<String>,
+    pub error_type: ErrorTypes
+}
+
+impl ErrorResponse {
+    pub fn new(cause: Option<String>, message: Option<String>, error_type: ErrorTypes) -> Self {
+        ErrorResponse {
+            cause,
+            message,
+            error_type,
+        }
+    }
 }

@@ -1,5 +1,6 @@
 use crate::api::api_authorization_request;
 
+use common::ErrorTypes;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::spawn_local;
 use web_sys::HtmlInputElement;
@@ -19,6 +20,7 @@ pub struct Props {
 pub fn authorization_form(props:&Props)->Html {
     let username = use_state(String::new);
     let password = use_state(String::new);
+    let validation_error=use_state(String::new);
 
     let username_input_ref = use_node_ref();
     let password_input_ref = use_node_ref();
@@ -45,11 +47,13 @@ pub fn authorization_form(props:&Props)->Html {
         let username_ref = username_input_ref.clone();
         let password_ref = password_input_ref.clone();
         let uri=props.uri.clone();
+        let validation_error=validation_error.clone();
         
         Callback::from(move |event: SubmitEvent| {
             let uri=uri.clone();
             let username=username.clone();
             let password=password.clone();
+            let validation_error=validation_error.clone();
 
             let username_ref = username_ref.clone();
             let password_ref = password_ref.clone();
@@ -74,11 +78,13 @@ pub fn authorization_form(props:&Props)->Html {
                 let response = api_authorization_request(form_data.to_string(),uri).await;
 
                 match response {
-                    Ok(_) => {
-                        log::info!("Success request!");
+                    Ok(_u) => {
+                        log::info!("Success form request!");
                     }
                     Err(e) => {
-                        log::error!("Error request {}", e);
+                        if e.error_type==ErrorTypes::ValidationError{
+                            validation_error.set(e.message.unwrap_or_default());
+                        }
                     }
                 }
             });
@@ -91,6 +97,7 @@ pub fn authorization_form(props:&Props)->Html {
                 <h2 class="">{props.title.clone()}</h2>
             </header>
             <form onsubmit={on_submit}>
+                <div class="form_errors">{validation_error.to_string()}</div>
                 <div class="">
                     <input
                         type="text"

@@ -4,7 +4,7 @@ use lazy_static::lazy_static;
 use regex::Regex;
 use time::OffsetDateTime;
 
-use common::errors;
+use crate::errors;
 
 //regexes for name and password validations
 lazy_static! {

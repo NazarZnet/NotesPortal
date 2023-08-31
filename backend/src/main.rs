@@ -3,11 +3,11 @@ mod auth;
 mod db;
 mod logging;
 mod schema;
+mod errors;
 
 use actix_cors::Cors;
 use actix_web::{http::header,get, middleware::Logger, web, App, HttpRequest, HttpResponse, HttpServer};
 use tracing::instrument;
-use common::errors;
 
 #[get("/")]
 #[instrument(skip_all,name="Index page",fields(uri = %req.uri(), method= %req.method()))]

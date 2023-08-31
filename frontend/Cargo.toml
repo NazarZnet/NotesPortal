@@ -5,8 +5,6 @@ edition = "2021"
 
 
 [dependencies]
-common={path = "../common", version ="0.1.0"}
-
 log = "0.4.20"
 reqwasm = "0.5.0"
 
@@ -19,3 +17,4 @@ web-sys = "0.3.64"
 yew = { version="0.20", features=["csr"] }
 yew-router = "0.17.0"
 
+common={ version ="0.1.0",path = "../common"}

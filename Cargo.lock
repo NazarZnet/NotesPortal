@@ -463,7 +463,6 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 name = "common"
 version = "0.1.0"
 dependencies = [
- "actix-web",
  "serde",
  "serde_json",
  "time",
@@ -770,8 +769,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "be4136b2a15dd319360be1c07d9933517ccf0be8f16bf62a3bee4f0d618df427"
 dependencies = [
  "cfg-if",
+ "js-sys",
  "libc",
  "wasi",
+ "wasm-bindgen",
 ]
 
 [[package]]
@@ -2156,6 +2157,7 @@ dependencies = [
  "getrandom",
  "rand",
  "serde",
+ "wasm-bindgen",
 ]
 
 [[package]]
