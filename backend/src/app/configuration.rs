@@ -3,11 +3,14 @@ use diesel::r2d2::{ConnectionManager, Pool};
 use r2d2::Error;
 use serde::{Deserialize, Serialize};
 
+use crate::schema::jwt::Jwt;
+
 pub type DbPool = Pool<ConnectionManager<PgConnection>>;
 
 #[derive(Deserialize, Serialize)]
 pub struct Settings {
     pub database: DbSettings,
+    pub auth: AuthSettings,
 }
 
 #[derive(Deserialize, Serialize)]
@@ -19,8 +22,22 @@ pub struct DbSettings {
     pub database_name: String,
 }
 
+#[derive(Deserialize, Serialize)]
+pub struct TokenConfig {
+    pub key: String,
+    pub exp: i64,
+    pub maxage: i64,
+}
+
+#[derive(Deserialize, Serialize)]
+pub struct AuthSettings {
+    pub access: TokenConfig,
+    pub refresh: TokenConfig,
+}
+
 pub struct AppState {
     pub connection: DbPool,
+    pub jwt: Jwt,
 }
 
 impl Settings {
@@ -41,7 +58,10 @@ impl Settings {
 
     pub fn create_app_state(&self) -> Result<AppState, Error> {
         let connection = self.database.get_connection_pool()?;
-        Ok(AppState { connection })
+        Ok(AppState {
+            connection,
+            jwt: Jwt::new(&self.auth.access, &self.auth.refresh),
+        })
     }
 }
 

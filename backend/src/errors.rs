@@ -1,11 +1,21 @@
-use actix_web::{http::StatusCode, HttpResponse, ResponseError};
+use actix_web::error::BlockingError;
+use actix_web::http::StatusCode;
+use actix_web::{HttpResponse, ResponseError};
 use serde::Serialize;
 
 #[derive(Debug, Serialize)]
-pub enum ErrorTypes {
-    DbError,
+pub enum Auth {
+    Authentication,
+    Authorization,
 }
 
+#[derive(Debug, Serialize)]
+pub enum ErrorTypes {
+    ValidationError,
+    DbError,
+    Auth(Auth),
+    JwtError,
+}
 
 #[derive(Debug, Serialize)]
 pub struct Error {
@@ -34,11 +44,25 @@ impl std::fmt::Display for Error {
 impl ResponseError for Error {
     fn status_code(&self) -> StatusCode {
         match &self.error_type {
+            ErrorTypes::ValidationError => StatusCode::BAD_REQUEST,
             ErrorTypes::DbError => StatusCode::INTERNAL_SERVER_ERROR,
+            ErrorTypes::Auth(auth) => match auth {
+                Auth::Authentication => StatusCode::UNAUTHORIZED,
+                Auth::Authorization => StatusCode::FORBIDDEN,
+            },
+            ErrorTypes::JwtError => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 
     fn error_response(&self) -> HttpResponse {
         HttpResponse::build(self.status_code()).json(self)
+    }
+}
+
+//convert error from 'web::block(||).await' to custom Error
+impl From<BlockingError> for Error {
+    fn from(value: BlockingError) -> Self {
+        tracing::error!("Error running async block operation!");
+        Error::new(Some(value.to_string()), None, ErrorTypes::DbError)
     }
 }
