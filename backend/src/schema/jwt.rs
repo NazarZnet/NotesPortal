@@ -1,7 +1,5 @@
-use crate::{
-    app::TokenConfig,
-    errors::{Auth, Error, ErrorTypes},
-};
+use crate::app::TokenConfig;
+use common::errors::{Auth, Error, ErrorTypes};
 use actix_web::{HttpMessage, HttpRequest};
 
 use actix_web::cookie::time::Duration as ActixWebDuration;

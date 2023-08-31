@@ -1,6 +1,4 @@
-use crate::{
-    api::api_authorization_request,
-};
+use crate::api::api_authorization_request;
 
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::spawn_local;

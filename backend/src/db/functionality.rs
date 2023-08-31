@@ -1,6 +1,7 @@
 use super::{verify_password_hash, User};
-use crate::{app::DbPool, errors, schema::user::NewUser};
+use crate::{app::DbPool, schema::user::NewUser};
 
+use common::errors;
 use diesel::prelude::*;
 use tracing::instrument;
 

@@ -6,12 +6,11 @@ use actix_web::{
 use serde_json::json;
 use time::Duration;
 use tracing::instrument;
-
+use common::errors;
 use crate::{
     app::AppState,
     auth::JwtMiddleware,
     db::{db_add_user, db_check_user, db_find_user},
-    errors,
     schema::{
         form::FormData,
         jwt::{TokenClaims, TokenType},

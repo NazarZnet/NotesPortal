@@ -1,15 +1,16 @@
 use actix_web::error::BlockingError;
 use actix_web::http::StatusCode;
 use actix_web::{HttpResponse, ResponseError};
-use serde::Serialize;
+use serde::{Serialize,Deserialize};
 
-#[derive(Debug, Serialize)]
+
+#[derive(Debug, Serialize,Deserialize)]
 pub enum Auth {
     Authentication,
     Authorization,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize,Deserialize)]
 pub enum ErrorTypes {
     ValidationError,
     DbError,
@@ -17,7 +18,7 @@ pub enum ErrorTypes {
     JwtError,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug,Serialize,Deserialize)]
 pub struct Error {
     pub cause: Option<String>,
     pub message: Option<String>,
@@ -62,7 +63,6 @@ impl ResponseError for Error {
 //convert error from 'web::block(||).await' to custom Error
 impl From<BlockingError> for Error {
     fn from(value: BlockingError) -> Self {
-        tracing::error!("Error running async block operation!");
         Error::new(Some(value.to_string()), None, ErrorTypes::DbError)
     }
 }

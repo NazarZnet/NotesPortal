@@ -4,10 +4,9 @@ use time::OffsetDateTime;
 use tracing::instrument;
 
 use std::future::{ready, Ready};
-
+use common::errors::{Auth, Error, ErrorTypes};
 use crate::{
     app::AppState,
-    errors::{Auth, Error, ErrorTypes},
     schema::jwt::TokenType,
 };
 
