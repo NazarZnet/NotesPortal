@@ -22,7 +22,7 @@ use crate::{
 #[post("/auth/signup")]
 #[instrument(skip(state), name = "Sign up user")]
 pub async fn signup_user(
-    data: web::Form<FormData>,
+    data: web::Json<FormData>,
     state: web::Data<AppState>,
 ) -> Result<HttpResponse, errors::Error> {
     let new_user = NewUser::parse(&data.username, &data.password)?;
@@ -35,7 +35,7 @@ pub async fn signup_user(
 #[post("/auth/login")]
 #[instrument(skip(state), name = "User log in")]
 async fn login_user(
-    data: web::Form<FormData>,
+    data: web::Json<FormData>,
     state: web::Data<AppState>,
 ) -> Result<HttpResponse, errors::Error> {
     let new_user = NewUser::parse(&data.username, &data.password)?;

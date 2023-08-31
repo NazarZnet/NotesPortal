@@ -5,7 +5,8 @@ mod errors;
 mod logging;
 mod schema;
 
-use actix_web::{get, middleware::Logger, web, App, HttpRequest, HttpResponse, HttpServer};
+use actix_cors::Cors;
+use actix_web::{http::header,get, middleware::Logger, web, App, HttpRequest, HttpResponse, HttpServer};
 use tracing::instrument;
 
 #[get("/")]
@@ -30,8 +31,18 @@ async fn main() -> std::io::Result<()> {
 
     tracing::info!("Server started on 127.0.0.1:8000");
     HttpServer::new(move || {
+        let cors = Cors::default()
+            .allowed_origin("http://127.0.0.1:8080")
+            .allowed_methods(vec!["GET", "POST", "PATCH", "DELETE"])
+            .allowed_headers(vec![
+                header::CONTENT_TYPE,
+                header::AUTHORIZATION,
+                header::ACCEPT,
+            ])
+            .supports_credentials();
         App::new()
             .app_data(app_state.clone())
+            .wrap(cors)
             .wrap(Logger::default())
             .service(index)
             .configure(auth::config)
