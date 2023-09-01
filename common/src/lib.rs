@@ -1,10 +1,9 @@
-use std::default;
 
 use serde::{Serialize,Deserialize};
 use uuid::Uuid;
 use time::OffsetDateTime;
 
-#[derive(Debug,Clone,Serialize,Deserialize)]
+#[derive(Debug,Clone,Serialize,Deserialize,PartialEq)]
 pub struct ResponseUser {
     pub id: Uuid,
     pub username: String,
@@ -19,13 +18,13 @@ pub struct LoginResponse{
     pub refresh:String
 }
 
-#[derive(Debug, Serialize,Deserialize,PartialEq)]
+#[derive(Debug, Serialize,Deserialize,PartialEq,Clone)]
 pub enum Auth {
     Authentication,
     Authorization,
 }
 
-#[derive(Debug, Serialize,Deserialize,Default,PartialEq)]
+#[derive(Debug, Serialize,Deserialize,Default,PartialEq,Clone)]
 pub enum ErrorTypes {
     ValidationError,
     DbError,
@@ -33,9 +32,10 @@ pub enum ErrorTypes {
     JwtError,
     #[default]
     RequestError,
+    DeserializeError,
 }
 
-#[derive(Debug,Serialize,Deserialize,Default)]
+#[derive(Debug,Serialize,Deserialize,Default,Clone,PartialEq)]
 pub struct ErrorResponse{
     pub cause: Option<String>,
     pub message: Option<String>,

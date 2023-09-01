@@ -1,8 +1,11 @@
 use yew::prelude::*;
 use yew_router::prelude::*;
 
+use crate::components::auth::types::FormType;
 use crate::components::switchbutton::SwitchButton;
-use crate::components::authorizationform::AuthorizationForm;
+use crate::components::auth::form::AuthorizationForm;
+use crate::components::alert::AlertComponent;
+// use crate::components::page::AuthPage;
 #[derive(Clone, Routable, PartialEq)]
 pub enum Route {
     #[at("/")]
@@ -18,7 +21,9 @@ pub enum Route {
     NotFound,
 }
 
+
 pub fn switch(routes: Route) -> Html {
+    
     match routes {
         Route::Home => {
             html! { 
@@ -31,18 +36,18 @@ pub fn switch(routes: Route) -> Html {
         Route::SignUp => {
             html! { 
                 <div>
-                    <h1>{ "Sign Up" }</h1>
-                    <AuthorizationForm title={"Create new account"} btn_value={"SignUp"} uri={"signup"}/>
-                    <SwitchButton text={"Log In"} route={Route::LogIn}/> 
+                    <AuthorizationForm formtype={FormType::SignUp}> 
+                        <AlertComponent message="You’ve been signed up successfully!" route={Route::LogIn} />
+                    </AuthorizationForm> 
                 </div>
             }
         }
         Route::LogIn => {
             html! { 
                 <div>
-                    <h1>{ "LogIn" }</h1>
-                    <AuthorizationForm title={"Log to your account"} btn_value={"LogIn"} uri={"login"}/>
-                    <SwitchButton text={"Posts"} route={Route::Posts}/> 
+                    <AuthorizationForm formtype={FormType::LogIn}>
+                        <AlertComponent message="You’ve been signed in successfully!" route={Route::Posts}/>
+                    </AuthorizationForm> 
                 </div>
             }
         }

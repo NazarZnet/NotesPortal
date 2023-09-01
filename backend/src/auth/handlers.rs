@@ -66,7 +66,7 @@ async fn login_user(
     Ok(HttpResponse::Ok()
         .cookie(aceess_cookie)
         .cookie(refresh_cookie)
-        .json(json!({"status": "success", "access": access_token,"refresh":refresh_token})))
+        .json(db_user))
 }
 
 #[get("/auth/refresh")]
