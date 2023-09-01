@@ -1,6 +1,7 @@
 use super::{verify_password_hash, User};
-use crate::{app::DbPool, errors, schema::user::NewUser};
+use crate::{app::DbPool, schema::user::NewUser};
 
+use crate::errors;
 use diesel::prelude::*;
 use tracing::instrument;
 
@@ -28,7 +29,7 @@ pub fn db_add_user(data: NewUser, connection: &DbPool) -> Result<User, errors::E
         return Err(errors::Error::new(
             None,
             Some("The username already exists!".to_string()),
-            errors::ErrorTypes::ValidationError,
+            errors::ErrorTypes::Auth(errors::Auth::Authentication),
         ));
     }
 
@@ -64,7 +65,7 @@ pub fn db_check_user(data: NewUser, connection: &DbPool) -> Result<User, errors:
             errors::Error::new(
                 Some(e.to_string()),
                 Some("User not found. Try to check your username!".to_string()),
-                errors::ErrorTypes::ValidationError,
+                errors::ErrorTypes::Auth(errors::Auth::Authentication),
             )
         })?;
 

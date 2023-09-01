@@ -1,8 +1,11 @@
 use yew::prelude::*;
 use yew_router::prelude::*;
 
+use crate::components::auth::types::FormType;
 use crate::components::switchbutton::SwitchButton;
-
+use crate::components::auth::form::AuthorizationForm;
+use crate::components::alert::AlertComponent;
+// use crate::components::page::AuthPage;
 #[derive(Clone, Routable, PartialEq)]
 pub enum Route {
     #[at("/")]
@@ -18,11 +21,13 @@ pub enum Route {
     NotFound,
 }
 
+
 pub fn switch(routes: Route) -> Html {
+    
     match routes {
         Route::Home => {
             html! { 
-                <div>
+                <div class="container">
                     <h1>{ "Home" }</h1>
                     <SwitchButton text={"Sign Up"} route={Route::SignUp}/> 
                 </div>
@@ -30,23 +35,25 @@ pub fn switch(routes: Route) -> Html {
         }
         Route::SignUp => {
             html! { 
-                <div>
-                    <h1>{ "Sign Up" }</h1>
-                    <SwitchButton text={"Log In"} route={Route::LogIn}/> 
+                <div class="container">
+                    <AuthorizationForm formtype={FormType::SignUp}> 
+                        <AlertComponent message="You’ve been signed up successfully!" route={Route::LogIn} />
+                    </AuthorizationForm> 
                 </div>
             }
         }
         Route::LogIn => {
             html! { 
-                <div>
-                    <h1>{ "LogIn" }</h1>
-                    <SwitchButton text={"Posts"} route={Route::Posts}/> 
+                <div class="container">
+                    <AuthorizationForm formtype={FormType::LogIn}>
+                        <AlertComponent message="You’ve been signed in successfully!" route={Route::Posts}/>
+                    </AuthorizationForm> 
                 </div>
             }
         }
         Route::Posts => {
             html! { 
-                <div>
+                <div class="container">
                     <h1>{ "Posts" }</h1>
                     <SwitchButton text={"Home"} route={Route::Home}/> 
                 </div>

@@ -6,12 +6,11 @@ use actix_web::{
 use serde_json::json;
 use time::Duration;
 use tracing::instrument;
-
+use crate::errors;
 use crate::{
     app::AppState,
     auth::JwtMiddleware,
     db::{db_add_user, db_check_user, db_find_user},
-    errors,
     schema::{
         form::FormData,
         jwt::{TokenClaims, TokenType},
@@ -22,7 +21,7 @@ use crate::{
 #[post("/auth/signup")]
 #[instrument(skip(state), name = "Sign up user")]
 pub async fn signup_user(
-    data: web::Form<FormData>,
+    data: web::Json<FormData>,
     state: web::Data<AppState>,
 ) -> Result<HttpResponse, errors::Error> {
     let new_user = NewUser::parse(&data.username, &data.password)?;
@@ -35,7 +34,7 @@ pub async fn signup_user(
 #[post("/auth/login")]
 #[instrument(skip(state), name = "User log in")]
 async fn login_user(
-    data: web::Form<FormData>,
+    data: web::Json<FormData>,
     state: web::Data<AppState>,
 ) -> Result<HttpResponse, errors::Error> {
     let new_user = NewUser::parse(&data.username, &data.password)?;
@@ -67,7 +66,7 @@ async fn login_user(
     Ok(HttpResponse::Ok()
         .cookie(aceess_cookie)
         .cookie(refresh_cookie)
-        .json(json!({"status": "success", "access": access_token,"refresh":refresh_token})))
+        .json(db_user))
 }
 
 #[get("/auth/refresh")]
