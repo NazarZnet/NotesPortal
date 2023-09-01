@@ -11,13 +11,13 @@ pub struct Props {
 #[function_component(AlertComponent)]
 pub fn alert_component(props: &Props) -> Html {
     html! {
-        <div class="">
-            <div>
-                <p class="">
+        <div class="alert">
+            <div class="alert_message">
+                <h1>
                     {props.message.clone()}
-                </p>
+                </h1>
             </div>
-            <button >
+            <button class="alert_btn">
                 {
                     match props.route{
                         Route::LogIn=>html!(

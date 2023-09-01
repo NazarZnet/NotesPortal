@@ -27,7 +27,7 @@ pub fn switch(routes: Route) -> Html {
     match routes {
         Route::Home => {
             html! { 
-                <div>
+                <div class="container">
                     <h1>{ "Home" }</h1>
                     <SwitchButton text={"Sign Up"} route={Route::SignUp}/> 
                 </div>
@@ -35,7 +35,7 @@ pub fn switch(routes: Route) -> Html {
         }
         Route::SignUp => {
             html! { 
-                <div>
+                <div class="container">
                     <AuthorizationForm formtype={FormType::SignUp}> 
                         <AlertComponent message="You’ve been signed up successfully!" route={Route::LogIn} />
                     </AuthorizationForm> 
@@ -44,7 +44,7 @@ pub fn switch(routes: Route) -> Html {
         }
         Route::LogIn => {
             html! { 
-                <div>
+                <div class="container">
                     <AuthorizationForm formtype={FormType::LogIn}>
                         <AlertComponent message="You’ve been signed in successfully!" route={Route::Posts}/>
                     </AuthorizationForm> 
@@ -53,7 +53,7 @@ pub fn switch(routes: Route) -> Html {
         }
         Route::Posts => {
             html! { 
-                <div>
+                <div class="container">
                     <h1>{ "Posts" }</h1>
                     <SwitchButton text={"Home"} route={Route::Home}/> 
                 </div>
