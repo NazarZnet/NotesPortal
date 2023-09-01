@@ -11,7 +11,7 @@ pub struct Props {
 pub fn list_errors(props: &Props) -> Html {
     if let Some(error) = &props.error {
         html! {
-            <ul class="error-messages">
+            <ul class="error_messages">
                 {
                     match error.error_type{
                         ErrorTypes::Auth(_)=>html!(
