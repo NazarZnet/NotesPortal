@@ -1,30 +1,65 @@
 use yew::prelude::*;
-use yew_hooks::use_async;
+use yew_hooks::{use_async, use_effect_once};
+use yew_router::prelude::use_navigator;
 
-use crate::api::get_posts_request;
+use super::{postitem::PostItem,list_erors::ListErrors};
+use crate::{api::get_posts_request, routes::Route};
 
 #[function_component(PostsList)]
 pub fn posts_list() -> Html {
     let api_request = { use_async(async move { get_posts_request("/posts".to_string()).await }) };
-    let onclick = {
-        let api_request = api_request.clone();
+    let navigator = use_navigator();
+    let go_to_login = {
         Callback::from(move |_| {
-            api_request.run();
+            if let Some(navigation) = &navigator {
+                navigation.push(&Route::LogIn);
+            } else {
+                log::error!("Navigator doesn't work!");
+            }
         })
     };
+    //sand api request when page is loading
+    {
+        let api_request = api_request.clone();
+        use_effect_once(move || {
+            api_request.run();
+            || log::debug!("Request started!")
+        })
+    }
+    {
+        use_effect_with_deps(
+            //check if response is Auth(Authorization) or Auth(Authentication) error then navigate to login page
+            move |request| {
+                if let Some(error) = &request.error {
+                    match &error.error_type {
+                        common::ErrorTypes::Auth(_e) => {
+                            log::error!("User not authorized!");
+                            go_to_login.emit(())
+                        },
+                        _ => {}
+                    }
+                }
+            },
+            api_request.clone(),
+        )
+    }
+
     html! {
         <div>
-            <button {onclick}>{"Get Posts"}</button>
-            {
-                if let Some(posts)=&api_request.data{
-                    html!(
-                        <div>
-                            { for posts.iter().map(|post| html!(<div>{post.title.clone()}</div>) )}
-                        </div>)
-                }else{
-                    html!()
-                }
+            <ListErrors error={api_request.error.clone()} />
+           {
+            if let Some(posts)=&api_request.data{
+                html!(
+                {for posts.iter().map(|post|html!(<PostItem post={post.clone()}/>))}
+                )
+            }else{
+                html!(
+                    <div>
+                    <h1>{"Haven't gotten any posts yet!"}</h1>
+                    </div>
+                )
             }
+           }
         </div>
     }
 }
