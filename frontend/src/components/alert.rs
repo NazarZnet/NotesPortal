@@ -2,10 +2,10 @@ use yew::prelude::*;
 use yew_router::prelude::Link;
 
 use crate::routes::Route;
-#[derive(Properties,PartialEq)]
+#[derive(Properties, PartialEq)]
 pub struct Props {
     pub message: String,
-    pub route: Route
+    pub route: Route,
 }
 
 #[function_component(AlertComponent)]

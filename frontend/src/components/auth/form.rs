@@ -1,49 +1,45 @@
 use crate::api::api_authorization_request;
 use crate::components::list_erors::ListErrors;
 
-
 use log;
-use yew_hooks::prelude::*;
 use web_sys::HtmlInputElement;
+use yew_hooks::prelude::*;
 
 use yew::prelude::*;
-use yew_router::prelude::Link;
 use yew::{function_component, html, Html, Properties};
+use yew_router::prelude::Link;
 
+use super::types::{FormData, FormSettings, FormType};
 use crate::routes::Route;
-use super::types::{FormType,FormData,FormSettings};
-
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
-    pub formtype:FormType,
-    pub children:Children
+    pub formtype: FormType,
+    pub children: Children,
 }
 
 #[function_component(AuthorizationForm)]
-pub fn authorization_form(props:&Props)->Html {
-    let settings:FormSettings=props.formtype.into();
+pub fn authorization_form(props: &Props) -> Html {
+    let settings: FormSettings = props.formtype.into();
 
-    let form_data=use_state(FormData::default);
-    let validation_error=use_state(String::new);
+    let form_data = use_state(FormData::default);
+    let validation_error = use_state(String::new);
 
     let api_request = {
         let form_data = form_data.clone();
-        let request_type=props.formtype.clone();
+        let request_type = props.formtype.clone();
         use_async(async move {
-            let info=(*form_data).clone(); 
-            api_authorization_request(info,request_type.to_string()).await
+            let info = (*form_data).clone();
+            api_authorization_request(info, request_type.to_string()).await
         })
     };
-    
 
-      
     {
         use_effect_with_deps(
             move |api_request| {
                 if let Some(user_info) = &api_request.data {
                     // user_ctx.login(user_info.user.clone());
-                    log::debug!("Userlogged in, {:?}",user_info);
+                    log::debug!("Userlogged in, {:?}", user_info);
                 }
                 || ()
             },
@@ -71,7 +67,6 @@ pub fn authorization_form(props:&Props)->Html {
         })
     };
 
-
     let onsubmit = {
         let api_request = api_request.clone();
         Callback::from(move |e: SubmitEvent| {
@@ -92,7 +87,7 @@ pub fn authorization_form(props:&Props)->Html {
                 }
             }
         <div class="form_box">
-            
+
             <header class="form_box_title">
                 <h2>{settings.title.clone()}</h2>
             </header>
@@ -101,13 +96,13 @@ pub fn authorization_form(props:&Props)->Html {
                 {
                     match props.formtype{
                         FormType::SignUp=>html!(
-                            <div class="form_route"> 
+                            <div class="form_route">
                                 <Link<Route> to={Route::LogIn}>
                                     { "Have an account?" }
                                 </Link<Route>>
                             </div>),
                         FormType::LogIn=>html!(
-                            <div class="form_route"> 
+                            <div class="form_route">
                                 <Link<Route> to={Route::SignUp}>
                                     { "Don't have an account?" }
                                 </Link<Route>>
@@ -146,7 +141,7 @@ pub fn authorization_form(props:&Props)->Html {
                 <button type="submit" class="form_btn">
                     {settings.value.clone()}
                 </button>
-                
+
             </form>
         </div>
     </div>

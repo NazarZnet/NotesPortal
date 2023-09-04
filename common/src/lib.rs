@@ -10,6 +10,14 @@ pub struct ResponseUser {
     pub created_at: OffsetDateTime,
     pub updated_at: OffsetDateTime,
 }
+#[derive(Serialize,Deserialize,Debug,Clone,PartialEq)]
+pub struct ResponsePost {
+    pub id: Uuid,
+    pub user_id: Uuid,
+    pub title: String,
+    pub description: Option<String>,
+    pub created_at: OffsetDateTime,
+}
 
 #[derive(Debug,Clone,Serialize,Deserialize)]
 pub struct LoginResponse{

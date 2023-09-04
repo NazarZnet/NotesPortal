@@ -1,7 +1,7 @@
+mod api;
 mod app;
 mod components;
 mod routes;
-mod api;
 
 use app::App;
 use dotenv;

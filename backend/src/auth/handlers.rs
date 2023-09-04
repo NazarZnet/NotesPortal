@@ -24,7 +24,7 @@ pub async fn signup_user(
     data: web::Json<FormData>,
     state: web::Data<AppState>,
 ) -> Result<HttpResponse, errors::Error> {
-    let new_user = NewUser::parse(&data.username, &data.password)?;
+    let new_user = NewUser::parse(&data.username, &data.password)?.build()?;
 
     let db_user = web::block(move || db_add_user(new_user, &state.connection)).await??;
 
@@ -37,7 +37,7 @@ async fn login_user(
     data: web::Json<FormData>,
     state: web::Data<AppState>,
 ) -> Result<HttpResponse, errors::Error> {
-    let new_user = NewUser::parse(&data.username, &data.password)?;
+    let new_user = NewUser::parse(&data.username,&data.password)?;
     let connection = state.connection.clone();
     let db_user = web::block(move || db_check_user(new_user, &connection)).await??;
 
