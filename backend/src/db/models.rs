@@ -25,5 +25,6 @@ pub struct Post {
     pub user_id: Uuid,
     pub title: String,
     pub description: Option<String>,
+    #[serde(with="time::serde::rfc3339")]
     pub created_at: OffsetDateTime,
 }

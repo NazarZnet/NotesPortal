@@ -2,7 +2,7 @@
 use serde::{Serialize,Deserialize};
 use uuid::Uuid;
 use time::OffsetDateTime;
-
+use time;
 #[derive(Debug,Clone,Serialize,Deserialize,PartialEq)]
 pub struct ResponseUser {
     pub id: Uuid,
@@ -16,6 +16,7 @@ pub struct ResponsePost {
     pub user_id: Uuid,
     pub title: String,
     pub description: Option<String>,
+    #[serde(with="time::serde::rfc3339")]
     pub created_at: OffsetDateTime,
 }
 

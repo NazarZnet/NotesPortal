@@ -1,0 +1,12 @@
+.post{
+    background: linear-gradient(45deg, #49365a, #70038c);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px;
+
+    &-header{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+}

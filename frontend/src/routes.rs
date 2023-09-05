@@ -6,6 +6,7 @@ use crate::components::auth::form::AuthorizationForm;
 use crate::components::auth::types::FormType;
 use crate::components::posts_list::PostsList;
 use crate::components::switchbutton::SwitchButton;
+use crate::components::auth::logout::LogOut;
 
 // use crate::components::page::AuthPage;
 #[derive(Clone, Routable, PartialEq)]
@@ -28,8 +29,10 @@ pub fn switch(routes: Route) -> Html {
         Route::Home => {
             html! {
                 <div class="container">
-                    <h1>{ "Home" }</h1>
-                    <SwitchButton text={"Sign Up"} route={Route::SignUp}/>
+                    <div class="flex-container">
+                        <h1>{ "Home" }</h1>
+                        <SwitchButton text={"Sign Up"} route={Route::SignUp}/>
+                    </div>
                 </div>
             }
         }
@@ -55,7 +58,10 @@ pub fn switch(routes: Route) -> Html {
             html! {
                 <div class="container">
                     <h1>{ "Posts" }</h1>
-                    <SwitchButton text={"Home"} route={Route::Home}/>
+                    <div class="flex-container">
+                        <SwitchButton text={"Home"} route={Route::Home}/>
+                        <LogOut/>
+                    </div>
                     <PostsList/>
                 </div>
             }

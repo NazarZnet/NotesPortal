@@ -13,7 +13,7 @@ pub async fn api_authorization_request<T: Serialize + std::fmt::Debug>(
     uri: String,
 ) -> Result<ResponseUser, ErrorResponse> {
     log::debug!("Make request with data: {:?} and uri: {}", form_data, uri);
-    //make post request to the API server
+    
     let response_data = request(http::Method::POST, uri, Some(form_data)).await;
     log::debug!("Response data: {:?}", response_data);
     response_data
@@ -21,11 +21,20 @@ pub async fn api_authorization_request<T: Serialize + std::fmt::Debug>(
 
 pub async fn get_posts_request(uri: String) -> Result<Vec<ResponsePost>, ErrorResponse> {
     log::debug!("Make request and uri: {}", uri);
-    //make post request to the API server
+   
     let response_data = request::<String, Vec<ResponsePost>>(http::Method::GET, uri, None).await;
     log::debug!("Response data: {:?}", response_data);
     response_data
 }
+pub async fn logout_request(uri: String) -> Result<(), ErrorResponse> {
+    log::debug!("Make request and uri: {}", uri);
+    
+    let _ = request::<String, ()>(http::Method::GET, uri, None).await;
+    log::debug!("Log Out successfully!");
+    Ok(())
+}
+
+
 
 pub async fn request<B, T>(
     method: http::Method,

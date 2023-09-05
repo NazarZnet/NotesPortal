@@ -19,7 +19,7 @@ pub fn switch_button(props: &Props) -> Html {
     let onclick = Callback::from(move |_| navigator.push(&route));
     html! {
         <div>
-            <button {onclick}>{ props.text.clone() }</button>
+            <button class="link" {onclick}>{ props.text.clone() }</button>
         </div>
     }
 }
