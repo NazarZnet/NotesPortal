@@ -2,8 +2,8 @@ use yew::prelude::*;
 use yew_hooks::{use_async, use_effect_once};
 use yew_router::prelude::use_navigator;
 
-use super::{postitem::PostItem,list_erors::ListErrors};
-use crate::{api::get_posts_request, routes::Route};
+use super::PostItem;
+use crate::{api::get_posts_request, routes::Route,components::list_erors::ListErrors};
 
 #[function_component(PostsList)]
 pub fn posts_list() -> Html {

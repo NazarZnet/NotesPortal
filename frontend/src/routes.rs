@@ -4,9 +4,10 @@ use yew_router::prelude::*;
 use crate::components::alert::AlertComponent;
 use crate::components::auth::form::AuthorizationForm;
 use crate::components::auth::types::FormType;
-use crate::components::posts_list::PostsList;
+use crate::components::posts::PostsList;
 use crate::components::switchbutton::SwitchButton;
 use crate::components::auth::logout::LogOut;
+use crate::components::posts::AddPostForm;
 
 // use crate::components::page::AuthPage;
 #[derive(Clone, Routable, PartialEq)]
@@ -19,6 +20,8 @@ pub enum Route {
     LogIn,
     #[at("/posts")]
     Posts,
+    #[at("/posts/add")]
+    AddPost,
     #[not_found]
     #[at("/404")]
     NotFound,
@@ -61,8 +64,19 @@ pub fn switch(routes: Route) -> Html {
                     <div class="flex-container">
                         <SwitchButton text={"Home"} route={Route::Home}/>
                         <LogOut/>
+
+                        <SwitchButton text={"Add Post"} route={Route::AddPost}/>
                     </div>
                     <PostsList/>
+                </div>
+            }
+        }
+        Route::AddPost=> {
+            html! {
+                <div class="container">
+                    <AddPostForm>
+                        <AlertComponent message="Pos added successfully!" route={Route::Posts}/>
+                    </AddPostForm>
                 </div>
             }
         }

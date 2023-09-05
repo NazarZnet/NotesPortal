@@ -1,7 +1,6 @@
 use crate::api::api_authorization_request;
 use crate::components::list_erors::ListErrors;
 
-use log;
 use web_sys::HtmlInputElement;
 use yew_hooks::prelude::*;
 
@@ -34,18 +33,6 @@ pub fn authorization_form(props: &Props) -> Html {
         })
     };
 
-    {
-        use_effect_with_deps(
-            move |api_request| {
-                if let Some(user_info) = &api_request.data {
-                    // user_ctx.login(user_info.user.clone());
-                    log::debug!("Userlogged in, {:?}", user_info);
-                }
-                || ()
-            },
-            api_request.clone(),
-        );
-    }
 
     let oninput_username = {
         let form_data = form_data.clone();

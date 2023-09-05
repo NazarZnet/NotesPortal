@@ -14,7 +14,6 @@ pub fn logout_button() -> Html {
     let navigator = use_navigator();
     
     {
-        // let api_request=api_request.clone();
         use_effect_with_deps(
             //check if response is Auth(Authorization) or Auth(Authentication) error then navigate to login page
             move |request| {

@@ -18,6 +18,13 @@ pub async fn api_authorization_request<T: Serialize + std::fmt::Debug>(
     log::debug!("Response data: {:?}", response_data);
     response_data
 }
+pub async fn logout_request(uri: String) -> Result<(), ErrorResponse> {
+    log::debug!("Make request and uri: {}", uri);
+    
+    let _ = request::<String, ()>(http::Method::GET, uri, None).await;
+    log::debug!("Log Out successfully!");
+    Ok(())
+}
 
 pub async fn get_posts_request(uri: String) -> Result<Vec<ResponsePost>, ErrorResponse> {
     log::debug!("Make request and uri: {}", uri);
@@ -26,12 +33,15 @@ pub async fn get_posts_request(uri: String) -> Result<Vec<ResponsePost>, ErrorRe
     log::debug!("Response data: {:?}", response_data);
     response_data
 }
-pub async fn logout_request(uri: String) -> Result<(), ErrorResponse> {
-    log::debug!("Make request and uri: {}", uri);
+pub async fn add_post_request<T: Serialize + std::fmt::Debug>(
+    form_data: T,
+    uri: String,
+) -> Result<ResponsePost, ErrorResponse> {
+    log::debug!("Make request with data: {:?} and uri: {}", form_data, uri);
     
-    let _ = request::<String, ()>(http::Method::GET, uri, None).await;
-    log::debug!("Log Out successfully!");
-    Ok(())
+    let response_data = request(http::Method::POST, uri, Some(form_data)).await;
+    log::debug!("Response data: {:?}", response_data);
+    response_data
 }
 
 
@@ -46,11 +56,8 @@ where
     B: Serialize + std::fmt::Debug,
 {
     let url = format!("{}{}", API_ROOT.clone(), uri);
-    log::debug!("uri{}", url);
-    // let mut builder = reqwest::Client::new()
-    //     .request(method.clone(), url)
-    //     .header("Content-Type", "application/json");
-
+    log::debug!("Url:{}", url);
+    
     let mut builder = http::Request::new(&url)
         .method(method)
         .credentials(http::RequestCredentials::Include)
