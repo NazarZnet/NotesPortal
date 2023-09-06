@@ -5,7 +5,6 @@ mod routes;
 
 use app::App;
 
-
 fn main() {
     dotenv::dotenv().ok();
     wasm_logger::init(wasm_logger::Config::new(log::Level::Debug));

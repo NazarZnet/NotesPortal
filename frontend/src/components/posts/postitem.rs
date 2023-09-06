@@ -1,33 +1,44 @@
-
+use common::PostsUpdateForm;
 use common::ResponsePost;
 use yew::prelude::*;
-use common::PostsUpdateData;
-
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
     pub post: ResponsePost,
-    pub update_callback:Callback<PostsUpdateData>
+    pub update_callback: Callback<PostsUpdateForm>,
 }
 
+/// The `PostItem` component renders a post item with a title, description, and
+/// date, and allows the user to toggle the importance of the post.
+///
+/// Arguments:
+///
+/// * `post`: Main post data that has type `ResponsePost`
+///
+/// * `update_callback`: Callback that will be called when user toggle the importance of the post.
+/// Send necessary post data, like: `PostsUpdateData
+/// Returns:
+///
+/// The `PostItem` component returns a HTML element representing a post item.
 #[function_component(PostItem)]
 pub fn post_item(props: &Props) -> Html {
     let update_callback = props.update_callback.clone();
     let post_id = props.post.id;
     let mut post_important = props.post.important;
-    
+
     let onclick = {
         //change important propertie
-        post_important= !post_important;
-        Callback::from(move |_e:MouseEvent| { 
-            let update_data=PostsUpdateData{id:post_id,important:post_important};
-            
+        post_important = !post_important;
+        Callback::from(move |_e: MouseEvent| {
+            let update_data = PostsUpdateForm {
+                id: post_id,
+                important: post_important,
+            };
+
             update_callback.emit(update_data);
             log::debug!("User clicked to the post");
         })
     };
-
-
 
     html! {
       <div class="post">

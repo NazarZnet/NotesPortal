@@ -1,7 +1,7 @@
 use crate::api::request;
-use common::ResponseUser;
-use reqwasm::http::Method;
 use crate::components::list_erors::ListErrors;
+use common::{ResponseUser, UserFormData};
+use reqwasm::http::Method;
 
 use web_sys::HtmlInputElement;
 use yew_hooks::prelude::*;
@@ -10,7 +10,7 @@ use yew::prelude::*;
 use yew::{function_component, html, Html, Properties};
 use yew_router::prelude::Link;
 
-use super::types::{FormData, FormSettings, FormType};
+use super::types::{FormSettings, FormType};
 use crate::routes::Route;
 
 #[derive(Properties, PartialEq)]
@@ -19,21 +19,35 @@ pub struct Props {
     pub children: Children,
 }
 
+/// Component that renders an HTML form for user
+/// authorization, including fields for username and password, and handles form submission and API
+/// requests.
+///
+/// Arguments:
+///
+/// * `formtype`: Determines whether the form is for signing up or logging in.
+/// Can be `FormType::SignUp` or `FormType::LogIn`.
+///
+/// * `children`: Components that will be rendered when authorization requests is successful.
 #[function_component(AuthorizationForm)]
 pub fn authorization_form(props: &Props) -> Html {
     let settings: FormSettings = props.formtype.into();
 
-    let form_data = use_state(FormData::default);
+    let form_data = use_state(UserFormData::default);
 
     let api_request = {
         let form_data = form_data.clone();
         let request_type = props.formtype;
         use_async(async move {
             let data = (*form_data).clone();
-            request::<FormData,ResponseUser>(Method::POST,request_type.to_string(),Some(data)).await
+            request::<UserFormData, ResponseUser>(
+                Method::POST,
+                request_type.to_string(),
+                Some(data),
+            )
+            .await
         })
     };
-
 
     let oninput_username = {
         let form_data = form_data.clone();

@@ -1,12 +1,14 @@
 mod app;
 mod auth;
 mod db;
+mod errors;
 mod logging;
 mod schema;
-mod errors;
 
 use actix_cors::Cors;
-use actix_web::{http::header,get, middleware::Logger, web, App, HttpRequest, HttpResponse, HttpServer};
+use actix_web::{
+    get, http::header, middleware::Logger, web, App, HttpRequest, HttpResponse, HttpServer,
+};
 use tracing::instrument;
 
 #[get("/")]
@@ -39,8 +41,7 @@ async fn main() -> std::io::Result<()> {
                 header::CONTENT_TYPE,
                 header::AUTHORIZATION,
                 header::ACCEPT,
-            ])
-            ;
+            ]);
         App::new()
             .app_data(app_state.clone())
             .wrap(cors)

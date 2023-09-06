@@ -1,16 +1,15 @@
 use actix_web::error::BlockingError;
 use actix_web::http::StatusCode;
 use actix_web::{HttpResponse, ResponseError};
-use serde::{Serialize,Deserialize};
+use serde::{Deserialize, Serialize};
 
-
-#[derive(Debug, Serialize,Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum Auth {
     Authentication,
     Authorization,
 }
 
-#[derive(Debug, Serialize,Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum ErrorTypes {
     ValidationError,
     DbError,
@@ -18,7 +17,17 @@ pub enum ErrorTypes {
     JwtError,
 }
 
-#[derive(Debug,Serialize,Deserialize)]
+/// The `Error` struct represents an error with optional cause, message, and error type.
+///
+/// Properties:
+///
+/// * `cause`: An optional string that represents the cause of the error. It provides additional
+/// information about why the error occurred.
+/// * `message`: The `message` property is an optional string that represents a human-readable
+/// description of the error. It can be used to provide additional information about the error to the
+/// user or developer.
+/// * `error_type`: The `error_type` property is of type `ErrorTypes`.
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Error {
     pub cause: Option<String>,
     pub message: Option<String>,

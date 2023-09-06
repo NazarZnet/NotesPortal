@@ -1,6 +1,11 @@
 use core::fmt;
-use serde::Serialize;
 
+/// `FormType` indicates the `AuthorizationForm` type
+/// Has two variants:
+/// * `FormType::SignUp` =>"/auth/signup"
+/// * `FormType::LogIn` => "auth/login"
+///
+/// Implements Display trait to convert `FormType` to URI string.
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum FormType {
     SignUp,
@@ -17,6 +22,15 @@ impl fmt::Display for FormType {
     }
 }
 
+/// The `FormSettings` struct represents the settings for a form, with a title and a value.
+///
+/// Properties:
+///
+/// * `title`: The `title` property is a string that represents the title of the form. It can be used to
+/// display a message or a heading to the user.
+/// * `value`: The `value` property in the `FormSettings` struct represents the value that will be
+/// displayed on the form button. It can be either "Sign Up" or "Log In" depending on the `FormType`
+/// variant.
 pub struct FormSettings {
     pub title: String,
     pub value: String,
@@ -35,10 +49,4 @@ impl From<FormType> for FormSettings {
             },
         }
     }
-}
-
-#[derive(Debug, Clone, Default, Serialize, PartialEq)]
-pub struct FormData {
-    pub username: String,
-    pub password: String,
 }

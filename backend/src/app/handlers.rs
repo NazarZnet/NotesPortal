@@ -1,16 +1,14 @@
-use actix_web::{
-    get, post, web, HttpResponse
-};
+use actix_web::{get, post, web, HttpResponse};
 
+use common::{PostsFormData, PostsUpdateForm};
 
-use tracing::instrument;
-use crate::{errors, schema::{form::{PostsFormData, PostsUpdateData}, post::NewPost}, db::{db_add_post, db_update_post}};
+use crate::{app::AppState, auth::JwtMiddleware, db::db_get_posts};
 use crate::{
-    app::AppState,
-    auth::JwtMiddleware,
-    db::db_get_posts,
-   
+    db::{db_add_post, db_update_post},
+    errors,
+    schema::post::NewPost,
 };
+use tracing::instrument;
 
 #[get("/posts")]
 #[instrument(skip_all, name = "Get all posts")]
@@ -18,12 +16,10 @@ async fn get_posts(
     state: web::Data<AppState>,
     _: JwtMiddleware,
 ) -> Result<HttpResponse, errors::Error> {
-
     let connection = state.connection.clone();
 
     let db_posts = web::block(move || db_get_posts(&connection)).await??;
-    Ok(HttpResponse::Ok()
-        .json(db_posts))
+    Ok(HttpResponse::Ok().json(db_posts))
 }
 
 #[post("/posts")]
@@ -31,14 +27,13 @@ async fn get_posts(
 async fn add_post(
     state: web::Data<AppState>,
     auth: JwtMiddleware,
-    data:web::Json<PostsFormData>
+    data: web::Json<PostsFormData>,
 ) -> Result<HttpResponse, errors::Error> {
-    let new_post=NewPost::parse(&data.title, &data.description, auth.user_id)?.build();
+    let new_post = NewPost::parse(&data.title, &data.description, auth.user_id)?.build();
     let connection = state.connection.clone();
 
-    let db_posts = web::block(move || db_add_post(new_post,&connection)).await??;
-    Ok(HttpResponse::Ok()
-        .json(db_posts))
+    let db_posts = web::block(move || db_add_post(new_post, &connection)).await??;
+    Ok(HttpResponse::Ok().json(db_posts))
 }
 
 #[post("/posts/update")]
@@ -46,12 +41,11 @@ async fn add_post(
 async fn update_posts(
     state: web::Data<AppState>,
     _: JwtMiddleware,
-    data:web::Json<PostsUpdateData>
+    data: web::Json<PostsUpdateForm>,
 ) -> Result<HttpResponse, errors::Error> {
-    let update_data=data.clone();
+    let update_data = data.clone();
     let connection = state.connection.clone();
 
-    let db_post = web::block(move || db_update_post(update_data,&connection)).await??;
-    Ok(HttpResponse::Ok()
-        .json(db_post))
+    let db_post = web::block(move || db_update_post(update_data, &connection)).await??;
+    Ok(HttpResponse::Ok().json(db_post))
 }

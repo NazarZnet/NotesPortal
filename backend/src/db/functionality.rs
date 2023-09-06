@@ -1,10 +1,25 @@
-use super::{verify_password_hash, User, Post};
+use super::{verify_password_hash, Post, User};
 use crate::app::DbPool;
 
 use crate::errors;
-use crate::schema::{user::NewUser,form::PostsUpdateData};
+use crate::schema::user::NewUser;
+use common::PostsUpdateForm;
 use diesel::prelude::*;
 use tracing::instrument;
+/// The function `db_add_user` adds a new user to a database, checking if the username already exists
+/// before inserting the user.
+///
+/// Arguments:
+///
+/// * `user`: The `user` parameter is of type `User`, which represents the user data that you want to
+/// add to the database.
+/// * `connection`: The `connection` parameter is of type `&DbPool`, which is a reference to a database
+/// connection pool. It is used to establish a connection to the database and perform database
+/// operations.
+///
+/// Returns:
+///
+/// The function `db_add_user` returns a `Result<User, errors::Error>`.
 
 #[instrument(name = "Add new user", skip(connection))]
 pub fn db_add_user(user: User, connection: &DbPool) -> Result<User, errors::Error> {
@@ -44,6 +59,19 @@ pub fn db_add_user(user: User, connection: &DbPool) -> Result<User, errors::Erro
 
     Ok(user)
 }
+/// The function `db_check_user` checks if a user is logged in by querying the database and verifying
+/// their password.
+///
+/// Arguments:
+///
+/// * `user`: The `user` parameter is of type `NewUser`, which represents the data of a new user that
+/// needs to be checked in the database. It contains the username and password of the user.
+/// * `connection`: The `connection` parameter is of type `DbPool`, which is a connection pool to the
+/// database. It is used to establish a connection to the database and perform database operations.
+///
+/// Returns:
+///
+/// The function `db_check_user` returns a `Result<User, errors::Error>`.
 
 #[instrument(name = "Check logged in data", skip(connection))]
 pub fn db_check_user(user: NewUser, connection: &DbPool) -> Result<User, errors::Error> {
@@ -73,10 +101,22 @@ pub fn db_check_user(user: NewUser, connection: &DbPool) -> Result<User, errors:
     verify_password_hash(&founded_user.password, &user.password.0)?;
     tracing::info!("User: {:?} verified!", founded_user);
 
-    
     Ok(founded_user)
 }
 
+/// The function `db_find_user` is used to find a user in the database based on their user ID.
+///
+/// Arguments:
+///
+/// * `user_id`: The `user_id` parameter is of type `uuid::Uuid` and represents the unique identifier
+/// of the user you want to find in the database.
+/// * `connection`: The `connection` parameter is of type `&DbPool`, which is a reference to a database
+/// connection pool. It is used to establish a connection to the database and perform database
+/// operations.
+///
+/// Returns:
+///
+/// The function `db_find_user` returns a `Result<User, errors::Error>`.
 #[instrument(name = "Find the user in db", skip(connection))]
 pub fn db_find_user(user_id: uuid::Uuid, connection: &DbPool) -> Result<User, errors::Error> {
     use super::schema::users::dsl::{id, users};
@@ -107,11 +147,21 @@ pub fn db_find_user(user_id: uuid::Uuid, connection: &DbPool) -> Result<User, er
     Ok(user)
 }
 
-
+/// The function `db_get_posts` retrieves all posts from a database table and returns them as a vector,
+/// with an optional error handling mechanism.
+///
+/// Arguments:
+///
+/// * `connection`: The `connection` parameter is of type `DbPool`, which represents a connection pool
+/// to the database. It is used to establish a connection to the database and execute queries.
+///
+/// Returns:
+///
+/// The function `db_get_posts` returns a `Result` containing a `Vec<Post>` or an `errors::Error`.
 
 #[instrument(name = "Get all posts", skip(connection))]
 pub fn db_get_posts(connection: &DbPool) -> Result<Vec<Post>, errors::Error> {
-    use super::schema::posts::{dsl::*,important};
+    use super::schema::posts::{dsl::*, important};
     let mut conn = connection.get().map_err(|e| {
         tracing::error!("Failed to get db connection pool!");
 
@@ -135,10 +185,22 @@ pub fn db_get_posts(connection: &DbPool) -> Result<Vec<Post>, errors::Error> {
             )
         })?;
     tracing::info!("Got posts:{:?} from db!", post);
-    
 
     Ok(post)
 }
+/// The function `db_add_post` adds a new post to the database using a connection pool.
+///
+/// Arguments:
+///
+/// * `post`: The `post` parameter is of type `Post`, which represents the data for the new post that
+/// you want to add to the database.
+/// * `connection`: The `connection` parameter is of type `&DbPool`, which is a reference to a database
+/// connection pool. It is used to establish a connection to the database and execute the database
+/// operations.
+///
+/// Returns:
+///
+/// The function `db_add_post` returns a `Result<Post, errors::Error>`.
 
 #[instrument(name = "Add new post", skip(connection))]
 pub fn db_add_post(post: Post, connection: &DbPool) -> Result<Post, errors::Error> {
@@ -153,7 +215,6 @@ pub fn db_add_post(post: Post, connection: &DbPool) -> Result<Post, errors::Erro
         )
     })?;
 
-
     diesel::insert_into(posts)
         .values(&post)
         .execute(&mut conn)
@@ -165,9 +226,23 @@ pub fn db_add_post(post: Post, connection: &DbPool) -> Result<Post, errors::Erro
 
     Ok(post)
 }
+/// This function updates the "important" field of a post in a database.
+///
+/// Arguments:
+///
+/// * `data`: PostsUpdateForm - a struct containing the data to update the post's important field. It
+/// likely has a field called "id" to identify the post and a field called "important" to update the
+/// value.
+/// * `connection`: The `connection` parameter is of type `&DbPool`, which is a reference to a database
+/// connection pool. It is used to establish a connection to the database and perform the update
+/// operation on the `posts` table.
+///
+/// Returns:
+///
+/// The function `db_update_post` returns a `Result<Post, errors::Error>`.
 
 #[instrument(name = "Update posts's impotant field!", skip(connection))]
-pub fn db_update_post(data:PostsUpdateData, connection: &DbPool) -> Result<Post, errors::Error> {
+pub fn db_update_post(data: PostsUpdateForm, connection: &DbPool) -> Result<Post, errors::Error> {
     use super::schema::posts::dsl::*;
     let mut conn = connection.get().map_err(|e| {
         tracing::error!("Failed to get db connection pool!");
@@ -192,7 +267,6 @@ pub fn db_update_post(data:PostsUpdateData, connection: &DbPool) -> Result<Post,
             )
         })?;
     tracing::info!("Updated post:{:?} from db!", post);
-    
 
     Ok(post)
 }

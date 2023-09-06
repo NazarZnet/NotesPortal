@@ -1,29 +1,44 @@
-use common::{PostsUpdateData, ResponsePost};
+use common::{PostsUpdateForm, ResponsePost};
 use yew::prelude::*;
 use yew_hooks::{use_async, use_effect_once};
 use yew_router::prelude::use_navigator;
 
 use super::PostItem;
-use crate::{api::request, routes::Route,components::list_erors::ListErrors};
+use crate::{api::request, components::list_erors::ListErrors, routes::Route};
 use reqwasm::http::Method;
+
+/// The `PostsList` component displaysa list of posts and allows for updating individual posts.
+///
+/// Returns:
+///
+/// The function `PostList` returns a HTML element.
 
 #[function_component(PostsList)]
 pub fn posts_list() -> Html {
-    let update_post_data=use_state(PostsUpdateData::default);
+    let update_post_data = use_state(PostsUpdateForm::default);
 
     //update post important field request
     let update_api_request = {
-        let data=update_post_data.clone();
+        let data = update_post_data.clone();
         use_async(async move {
-            let data=(*data).clone();
-            request::<PostsUpdateData,ResponsePost>(Method::POST,"/posts/update".to_owned(),Some(data)).await
+            let data = (*data).clone();
+            request::<PostsUpdateForm, ResponsePost>(
+                Method::POST,
+                "/posts/update".to_owned(),
+                Some(data),
+            )
+            .await
         })
     };
 
-    //main api requst 
-    let api_request = { use_async(async move { request::<(),Vec<ResponsePost>>(Method::GET,"/posts".to_owned(),None).await }) };
-   
-    //navigate to login page 
+    //main api requst
+    let api_request = {
+        use_async(async move {
+            request::<(), Vec<ResponsePost>>(Method::GET, "/posts".to_owned(), None).await
+        })
+    };
+
+    //navigate to login page
     let navigator = use_navigator();
     let go_to_login = {
         Callback::from(move |_| {
@@ -53,17 +68,15 @@ pub fn posts_list() -> Html {
                         go_to_login.emit(())
                     }
                 }
-                
             },
             api_request.clone(),
         )
     }
 
-
     //main update callback that moves to children
-    let update_post={
-        let api_request=api_request.clone();
-        Callback::from(move |post:PostsUpdateData|{
+    let update_post = {
+        let api_request = api_request.clone();
+        Callback::from(move |post: PostsUpdateForm| {
             //set new data for update request
             update_post_data.set(post);
             //run api update request
@@ -72,9 +85,6 @@ pub fn posts_list() -> Html {
             api_request.run();
         })
     };
-
-   
-    
 
     html! {
         <div>
