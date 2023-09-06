@@ -2,7 +2,7 @@ use super::{verify_password_hash, User, Post};
 use crate::app::DbPool;
 
 use crate::errors;
-use crate::schema::user::NewUser;
+use crate::schema::{user::NewUser,form::PostsUpdateData};
 use diesel::prelude::*;
 use tracing::instrument;
 
@@ -111,7 +111,7 @@ pub fn db_find_user(user_id: uuid::Uuid, connection: &DbPool) -> Result<User, er
 
 #[instrument(name = "Get all posts", skip(connection))]
 pub fn db_get_posts(connection: &DbPool) -> Result<Vec<Post>, errors::Error> {
-    use super::schema::posts::dsl::*;
+    use super::schema::posts::{dsl::*,important};
     let mut conn = connection.get().map_err(|e| {
         tracing::error!("Failed to get db connection pool!");
 
@@ -124,6 +124,7 @@ pub fn db_get_posts(connection: &DbPool) -> Result<Vec<Post>, errors::Error> {
 
     let post = posts
         .select(Post::as_returning())
+        .order(important.desc())
         .load(&mut conn)
         .map_err(|e| {
             tracing::error!("Failed to get posts");
@@ -161,6 +162,37 @@ pub fn db_add_post(post: Post, connection: &DbPool) -> Result<Post, errors::Erro
             errors::Error::new(Some(e.to_string()), None, errors::ErrorTypes::DbError)
         })?;
     tracing::info!("Post: {:?} added successfully!", post);
+
+    Ok(post)
+}
+
+#[instrument(name = "Update posts's impotant field!", skip(connection))]
+pub fn db_update_post(data:PostsUpdateData, connection: &DbPool) -> Result<Post, errors::Error> {
+    use super::schema::posts::dsl::*;
+    let mut conn = connection.get().map_err(|e| {
+        tracing::error!("Failed to get db connection pool!");
+
+        errors::Error::new(
+            Some(e.to_string()),
+            Some("Failed to get db connection pool!".to_string()),
+            errors::ErrorTypes::DbError,
+        )
+    })?;
+
+    let post = diesel::update(posts.find(data.id))
+        .set(important.eq(data.important))
+        .returning(Post::as_returning())
+        .get_result(&mut conn)
+        .map_err(|e| {
+            tracing::error!("Failed to update the post");
+            errors::Error::new(
+                Some(e.to_string()),
+                Some("Can not update this post!".to_string()),
+                errors::ErrorTypes::DbError,
+            )
+        })?;
+    tracing::info!("Updated post:{:?} from db!", post);
+    
 
     Ok(post)
 }

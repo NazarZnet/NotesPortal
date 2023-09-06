@@ -14,6 +14,7 @@ pub struct ResponseUser {
 pub struct ResponsePost {
     pub id: Uuid,
     pub user_id: Uuid,
+    pub important:bool,
     pub title: String,
     pub description: Option<String>,
     #[serde(with="time::serde::rfc3339")]
@@ -59,4 +60,11 @@ impl ErrorResponse {
             error_type,
         }
     }
+}
+
+
+#[derive(Debug,Clone,Default,Serialize)]
+pub struct PostsUpdateData{
+    pub id:uuid::Uuid,
+    pub important:bool
 }

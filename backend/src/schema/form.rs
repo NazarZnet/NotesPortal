@@ -11,3 +11,9 @@ pub struct PostsFormData {
     pub title: String,
     pub description: Option<String>,
 }
+
+#[derive(Debug, Serialize, Deserialize,Clone)]
+pub struct PostsUpdateData{
+    pub id:uuid::Uuid,
+    pub important:bool
+}

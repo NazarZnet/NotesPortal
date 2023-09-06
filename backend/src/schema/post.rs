@@ -32,6 +32,6 @@ impl NewPost{
   }
     pub fn build(&self) -> Post{
     tracing::info!("Converting data to DB Post!");
-      Post { id: uuid::Uuid::new_v4(), user_id:self.user_id, title: self.title.0.clone(), description: self.description.clone(), created_at: OffsetDateTime::now_utc() }  
+      Post { id: uuid::Uuid::new_v4(), user_id:self.user_id, important:false,title: self.title.0.clone(), description: self.description.clone(), created_at: OffsetDateTime::now_utc() }  
     }
 }

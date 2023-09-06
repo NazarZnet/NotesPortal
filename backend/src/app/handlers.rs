@@ -4,7 +4,7 @@ use actix_web::{
 
 
 use tracing::instrument;
-use crate::{errors, schema::{form::PostsFormData, post::NewPost}, db::db_add_post};
+use crate::{errors, schema::{form::{PostsFormData, PostsUpdateData}, post::NewPost}, db::{db_add_post, db_update_post}};
 use crate::{
     app::AppState,
     auth::JwtMiddleware,
@@ -39,4 +39,19 @@ async fn add_post(
     let db_posts = web::block(move || db_add_post(new_post,&connection)).await??;
     Ok(HttpResponse::Ok()
         .json(db_posts))
+}
+
+#[post("/posts/update")]
+#[instrument(skip_all, name = "Update post's important field")]
+async fn update_posts(
+    state: web::Data<AppState>,
+    _: JwtMiddleware,
+    data:web::Json<PostsUpdateData>
+) -> Result<HttpResponse, errors::Error> {
+    let update_data=data.clone();
+    let connection = state.connection.clone();
+
+    let db_post = web::block(move || db_update_post(update_data,&connection)).await??;
+    Ok(HttpResponse::Ok()
+        .json(db_post))
 }

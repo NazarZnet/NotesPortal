@@ -5,6 +5,7 @@ use serde::{de::DeserializeOwned, Serialize};
 
 use once_cell::sync::Lazy;
 
+//get root part of request address from .env file
 static API_ROOT: Lazy<String> =
     Lazy::new(|| dotenv::var("API_ROOT").unwrap_or("http://127.0.0.1:8000".to_string()));
 
@@ -44,7 +45,16 @@ pub async fn add_post_request<T: Serialize + std::fmt::Debug>(
     response_data
 }
 
-
+pub async fn update_post_request<T: Serialize + std::fmt::Debug>(
+    form_data: T,
+    uri: String,
+) -> Result<ResponsePost, ErrorResponse> {
+    log::debug!("Make request with data: {:?} and uri: {}", form_data, uri);
+    
+    let response_data = request(http::Method::POST, uri, Some(form_data)).await;
+    log::debug!("Response data: {:?}", response_data);
+    response_data
+}
 
 pub async fn request<B, T>(
     method: http::Method,

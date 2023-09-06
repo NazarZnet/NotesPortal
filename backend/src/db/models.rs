@@ -23,6 +23,7 @@ pub struct User {
 pub struct Post {
     pub id: Uuid,
     pub user_id: Uuid,
+    pub important:bool,
     pub title: String,
     pub description: Option<String>,
     #[serde(with="time::serde::rfc3339")]
