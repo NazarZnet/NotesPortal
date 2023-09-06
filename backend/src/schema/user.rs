@@ -51,7 +51,7 @@ impl NewUser {
         tracing::info!("Successfully validated!");
         Ok(NewUser { username, password })
     }
-    pub fn to_user(&self) -> Result<User, errors::Error> {
+    pub fn build(&self) -> Result<User, errors::Error> {
         tracing::info!("Converting data to DB User!");
         let hashed_password = hash_password(&self.password.0)?;
         Ok(User {

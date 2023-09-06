@@ -2,10 +2,10 @@ use yew::prelude::*;
 use yew_router::prelude::Link;
 
 use crate::routes::Route;
-#[derive(Properties,PartialEq)]
+#[derive(Properties, PartialEq)]
 pub struct Props {
     pub message: String,
-    pub route: Route
+    pub route: Route,
 }
 
 #[function_component(AlertComponent)]
@@ -28,6 +28,11 @@ pub fn alert_component(props: &Props) -> Html {
                             <Link<Route> to={props.route.clone()}>
                                 { "Go to posts" }
                             </Link<Route>>),
+                        Route::Home=>html!(
+                            <Link<Route> to={props.route.clone()}>
+                                { "Home" }
+                            </Link<Route>>
+                        ),
                         _=>html!()
                     }
                 }

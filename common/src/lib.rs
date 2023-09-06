@@ -10,6 +10,16 @@ pub struct ResponseUser {
     pub created_at: OffsetDateTime,
     pub updated_at: OffsetDateTime,
 }
+#[derive(Serialize,Deserialize,Debug,Clone,PartialEq)]
+pub struct ResponsePost {
+    pub id: Uuid,
+    pub user_id: Uuid,
+    pub important:bool,
+    pub title: String,
+    pub description: Option<String>,
+    #[serde(with="time::serde::rfc3339")]
+    pub created_at: OffsetDateTime,
+}
 
 #[derive(Debug,Clone,Serialize,Deserialize)]
 pub struct LoginResponse{
@@ -50,4 +60,11 @@ impl ErrorResponse {
             error_type,
         }
     }
+}
+
+
+#[derive(Debug,Clone,Default,Serialize)]
+pub struct PostsUpdateData{
+    pub id:uuid::Uuid,
+    pub important:bool
 }

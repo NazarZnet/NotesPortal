@@ -33,19 +33,21 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         let cors = Cors::default()
             .allowed_origin("http://127.0.0.1:8080")
+            .supports_credentials()
             .allowed_methods(vec!["GET", "POST", "PATCH", "DELETE"])
             .allowed_headers(vec![
                 header::CONTENT_TYPE,
                 header::AUTHORIZATION,
                 header::ACCEPT,
             ])
-            .supports_credentials();
+            ;
         App::new()
             .app_data(app_state.clone())
             .wrap(cors)
             .wrap(Logger::default())
             .service(index)
             .configure(auth::config)
+            .configure(app::config)
     })
     .bind(("127.0.0.1", 8000))?
     .run()

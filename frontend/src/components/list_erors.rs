@@ -1,6 +1,6 @@
 use yew::prelude::*;
 
-use common::{ErrorTypes, ErrorResponse};
+use common::{ErrorResponse, ErrorTypes};
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct Props {

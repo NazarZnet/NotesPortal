@@ -68,6 +68,18 @@
                 border:none;
                 border: 2px solid #520365;
             }
+        }
+        & textarea{
+            width: 100%;
+            border:1px solid #6a0484;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 1.2rem;
+
+            &:focus{
+                border:none;
+                border: 2px solid #520365;
+            }
 
         }
 
@@ -93,3 +105,4 @@
         }
     }
 }
+

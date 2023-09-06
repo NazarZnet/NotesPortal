@@ -15,11 +15,11 @@ pub struct Props {
 pub fn switch_button(props: &Props) -> Html {
     let navigator = use_navigator().unwrap();
 
-    let route=props.route.clone();
+    let route = props.route.clone();
     let onclick = Callback::from(move |_| navigator.push(&route));
     html! {
         <div>
-            <button {onclick}>{ props.text.clone() }</button>
+            <button class="link" {onclick}>{ props.text.clone() }</button>
         </div>
     }
 }

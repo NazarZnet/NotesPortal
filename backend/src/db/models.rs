@@ -3,7 +3,7 @@ use time::OffsetDateTime;
 use uuid::Uuid;
 
 use super::schema::{posts, users};
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
 
 #[derive(Queryable, Selectable, Serialize, Insertable, Debug)]
 #[diesel(table_name =users)]
@@ -17,13 +17,15 @@ pub struct User {
     pub updated_at: OffsetDateTime,
 }
 
-#[derive(Queryable, Selectable)]
+#[derive(Queryable, Selectable,Insertable,Serialize,Deserialize,Debug)]
 #[diesel(table_name = posts)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Post {
     pub id: Uuid,
     pub user_id: Uuid,
+    pub important:bool,
     pub title: String,
     pub description: Option<String>,
+    #[serde(with="time::serde::rfc3339")]
     pub created_at: OffsetDateTime,
 }
