@@ -48,12 +48,9 @@ pub fn posts_list() -> Html {
             //check if response is Auth(Authorization) or Auth(Authentication) error then navigate to login page
             move |request| {
                 if let Some(error) = &request.error {
-                    match &error.error_type {
-                        common::ErrorTypes::Auth(_e) => {
-                            log::error!("User not authorized!");
-                            go_to_login.emit(())
-                        },
-                        _ => {}
+                    if let common::ErrorTypes::Auth(_e) = &error.error_type {
+                        log::error!("User not authorized!");
+                        go_to_login.emit(())
                     }
                 }
                 

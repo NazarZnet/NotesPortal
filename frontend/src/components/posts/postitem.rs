@@ -13,14 +13,14 @@ pub struct Props {
 #[function_component(PostItem)]
 pub fn post_item(props: &Props) -> Html {
     let update_callback = props.update_callback.clone();
-    let post_id = props.post.id.clone();
-    let mut post_important = props.post.important.clone();
+    let post_id = props.post.id;
+    let mut post_important = props.post.important;
     
     let onclick = {
         //change important propertie
-        post_important=!post_important;
+        post_important= !post_important;
         Callback::from(move |_e:MouseEvent| { 
-            let update_data=PostsUpdateData{id:post_id.clone(),important:post_important};
+            let update_data=PostsUpdateData{id:post_id,important:post_important};
             
             update_callback.emit(update_data);
             log::debug!("User clicked to the post");

@@ -18,7 +18,7 @@ pub fn logout_button() -> Html {
         use_effect_with_deps(
             //check if response is Auth(Authorization) or Auth(Authentication) error then navigate to login page
             move |request| {
-                if let Some(_) = &request.data {
+                if request.data.is_some() {
                    if let Some(navigatio)=&navigator{
                     navigatio.push(&Route::Home)
                    }

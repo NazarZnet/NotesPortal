@@ -2,7 +2,7 @@
 use serde::{Serialize,Deserialize};
 use uuid::Uuid;
 use time::OffsetDateTime;
-use time;
+
 #[derive(Debug,Clone,Serialize,Deserialize,PartialEq)]
 pub struct ResponseUser {
     pub id: Uuid,

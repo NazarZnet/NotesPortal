@@ -27,7 +27,7 @@ pub fn authorization_form(props: &Props) -> Html {
 
     let api_request = {
         let form_data = form_data.clone();
-        let request_type = props.formtype.clone();
+        let request_type = props.formtype;
         use_async(async move {
             let data = (*form_data).clone();
             request::<FormData,ResponseUser>(Method::POST,request_type.to_string(),Some(data)).await

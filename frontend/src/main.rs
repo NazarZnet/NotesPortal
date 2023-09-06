@@ -4,7 +4,7 @@ mod components;
 mod routes;
 
 use app::App;
-use dotenv;
+
 
 fn main() {
     dotenv::dotenv().ok();
