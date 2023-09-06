@@ -1,4 +1,6 @@
-use crate::api::add_post_request;
+use crate::api::request;
+use common::ResponsePost;
+use reqwasm::http::Method;
 use crate::components::list_erors::ListErrors;
 
 
@@ -25,8 +27,8 @@ pub fn add_post_form(props: &Props) -> Html {
     let api_request = {
         let form_data = form_data.clone();
         use_async(async move {
-            let post = (*form_data).clone();
-            add_post_request(post, "/posts".to_owned()).await
+            let data = (*form_data).clone();
+            request::<FormData,ResponsePost>(Method::POST, "/posts".to_owned(),Some(data)).await
         })
     };
 

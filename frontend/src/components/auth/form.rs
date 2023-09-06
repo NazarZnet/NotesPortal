@@ -1,4 +1,6 @@
-use crate::api::api_authorization_request;
+use crate::api::request;
+use common::ResponseUser;
+use reqwasm::http::Method;
 use crate::components::list_erors::ListErrors;
 
 use web_sys::HtmlInputElement;
@@ -27,8 +29,8 @@ pub fn authorization_form(props: &Props) -> Html {
         let form_data = form_data.clone();
         let request_type = props.formtype.clone();
         use_async(async move {
-            let info = (*form_data).clone();
-            api_authorization_request(info, request_type.to_string()).await
+            let data = (*form_data).clone();
+            request::<FormData,ResponseUser>(Method::POST,request_type.to_string(),Some(data)).await
         })
     };
 

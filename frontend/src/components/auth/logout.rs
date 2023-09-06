@@ -2,11 +2,12 @@ use yew::prelude::*;
 use yew_hooks::use_async;
 use yew_router::prelude::use_navigator;
 
-use crate::{api::logout_request, routes::Route};
+use reqwasm::http::Method;
+use crate::{api::request, routes::Route};
 
 #[function_component(LogOut)]
 pub fn logout_button() -> Html {
-    let api_request = { use_async(async move { logout_request("/auth/logout".to_string()).await }) };
+    let api_request = { use_async(async move { request::<(),()>(Method::GET,"/auth/logout".to_string(),None).await }) };
     let onclick={
         let api_request=api_request.clone();
         Callback::from(move|_|api_request.run())

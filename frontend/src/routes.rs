@@ -9,7 +9,7 @@ use crate::components::switchbutton::SwitchButton;
 use crate::components::auth::logout::LogOut;
 use crate::components::posts::AddPostForm;
 
-// use crate::components::page::AuthPage;
+
 #[derive(Clone, Routable, PartialEq)]
 pub enum Route {
     #[at("/")]
@@ -80,6 +80,10 @@ pub fn switch(routes: Route) -> Html {
                 </div>
             }
         }
-        Route::NotFound => html! { <h1>{ "404" }</h1> },
+        Route::NotFound => html! { 
+            <div class="container">
+                <AlertComponent message="404! Page not found!" route={Route::Home}/>
+            </div>
+         },
     }
 }

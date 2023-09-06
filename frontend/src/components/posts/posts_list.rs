@@ -1,10 +1,11 @@
-use common::PostsUpdateData;
+use common::{PostsUpdateData, ResponsePost};
 use yew::prelude::*;
 use yew_hooks::{use_async, use_effect_once};
 use yew_router::prelude::use_navigator;
 
 use super::PostItem;
-use crate::{api::{get_posts_request, update_post_request}, routes::Route,components::list_erors::ListErrors};
+use crate::{api::request, routes::Route,components::list_erors::ListErrors};
+use reqwasm::http::Method;
 
 #[function_component(PostsList)]
 pub fn posts_list() -> Html {
@@ -14,13 +15,13 @@ pub fn posts_list() -> Html {
     let update_api_request = {
         let data=update_post_data.clone();
         use_async(async move {
-            let update_post=(*data).clone();
-            update_post_request(update_post, "/posts/update".to_owned()).await
+            let data=(*data).clone();
+            request::<PostsUpdateData,ResponsePost>(Method::POST,"/posts/update".to_owned(),Some(data)).await
         })
     };
 
     //main api requst 
-    let api_request = { use_async(async move { get_posts_request("/posts".to_string()).await }) };
+    let api_request = { use_async(async move { request::<(),Vec<ResponsePost>>(Method::GET,"/posts".to_owned(),None).await }) };
    
     //navigate to login page 
     let navigator = use_navigator();
