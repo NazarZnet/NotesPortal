@@ -3,14 +3,17 @@ use actix_web::{dev::Payload, web, FromRequest, HttpMessage, HttpRequest};
 use time::OffsetDateTime;
 use tracing::instrument;
 
-use std::future::{ready, Ready};
 use crate::errors::{Auth, Error, ErrorTypes};
-use crate::{
-    app::AppState,
-    schema::jwt::TokenType,
-};
+use crate::{app::AppState, schema::jwt::TokenType};
+use std::future::{ready, Ready};
 
-//custom middleware to check if token exist in request and refresh it
+/// The `JwtMiddleware` struct represents a middleware for handling JSON Web Tokens (JWTs) with an
+/// associated user ID.
+///
+/// Properties:
+///
+/// * `user_id`: The `user_id` property is of type `uuid::Uuid`, which represents a Universally Unique
+/// Identifier (UUID). UUIDs are commonly used to uniquely identify entities in a distributed system.
 #[derive(Debug)]
 pub struct JwtMiddleware {
     pub user_id: uuid::Uuid,

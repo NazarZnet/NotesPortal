@@ -3,25 +3,25 @@ use actix_web::{
     get, post, web, HttpRequest, HttpResponse, Responder,
 };
 
-use serde_json::json;
-use time::Duration;
-use tracing::instrument;
 use crate::errors;
 use crate::{
     app::AppState,
     auth::JwtMiddleware,
     db::{db_add_user, db_check_user, db_find_user},
     schema::{
-        form::FormData,
         jwt::{TokenClaims, TokenType},
         user::NewUser,
     },
 };
+use common::UserFormData;
+use serde_json::json;
+use time::Duration;
+use tracing::instrument;
 
 #[post("/auth/signup")]
 #[instrument(skip(state), name = "Sign up user")]
 pub async fn signup_user(
-    data: web::Json<FormData>,
+    data: web::Json<UserFormData>,
     state: web::Data<AppState>,
 ) -> Result<HttpResponse, errors::Error> {
     let new_user = NewUser::parse(&data.username, &data.password)?.build()?;
@@ -34,10 +34,10 @@ pub async fn signup_user(
 #[post("/auth/login")]
 #[instrument(skip(state), name = "User log in")]
 async fn login_user(
-    data: web::Json<FormData>,
+    data: web::Json<UserFormData>,
     state: web::Data<AppState>,
 ) -> Result<HttpResponse, errors::Error> {
-    let new_user = NewUser::parse(&data.username,&data.password)?;
+    let new_user = NewUser::parse(&data.username, &data.password)?;
     let connection = state.connection.clone();
     let db_user = web::block(move || db_check_user(new_user, &connection)).await??;
 

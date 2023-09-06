@@ -1,8 +1,7 @@
 use crate::api::request;
-use common::ResponsePost;
-use reqwasm::http::Method;
 use crate::components::list_erors::ListErrors;
-
+use common::{PostsFormData, ResponsePost};
+use reqwasm::http::Method;
 
 use web_sys::HtmlInputElement;
 use yew_hooks::prelude::*;
@@ -10,25 +9,35 @@ use yew_hooks::prelude::*;
 use yew::prelude::*;
 use yew::{function_component, html, Html, Properties};
 
-
-
-use super::FormData;
-
-
 #[derive(Properties, PartialEq)]
 pub struct Props {
     pub children: Children,
 }
+/// Component that renders a form for adding a new post, including
+/// fields for title and description.
+///
+/// Arguments:
+///
+/// * `children`: Components that will be rendered when adding post requests is successful.
+/// Returns:
+///
+/// Returns:
+///
+/// The `AddPostForm` component returns a HTML element that represents a form for adding a new post.
+/// The form includes input fields for the title and description of the post, as well as a submit
+/// button. The function also includes logic for handling user input and making an API request to add
+/// the post.
 
 #[function_component(AddPostForm)]
 pub fn add_post_form(props: &Props) -> Html {
-    let form_data = use_state(FormData::default);
+    let form_data = use_state(PostsFormData::default);
 
     let api_request = {
         let form_data = form_data.clone();
         use_async(async move {
             let data = (*form_data).clone();
-            request::<FormData,ResponsePost>(Method::POST, "/posts".to_owned(),Some(data)).await
+            request::<PostsFormData, ResponsePost>(Method::POST, "/posts".to_owned(), Some(data))
+                .await
         })
     };
 

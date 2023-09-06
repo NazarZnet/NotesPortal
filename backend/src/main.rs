@@ -1,19 +1,16 @@
 mod app;
 mod auth;
 mod db;
+mod errors;
 mod logging;
 mod schema;
-mod errors;
 
 use actix_cors::Cors;
-use actix_web::{http::header,get, middleware::Logger, web, App, HttpRequest, HttpResponse, HttpServer};
-use tracing::instrument;
+use actix_web::{
+    http::header, middleware::Logger, web, App,HttpServer
+};
 
-#[get("/")]
-#[instrument(skip_all,name="Index page",fields(uri = %req.uri(), method= %req.method()))]
-pub async fn index(req: HttpRequest) -> Result<HttpResponse, errors::Error> {
-    Ok(HttpResponse::Ok().body("Helo"))
-}
+
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -39,13 +36,11 @@ async fn main() -> std::io::Result<()> {
                 header::CONTENT_TYPE,
                 header::AUTHORIZATION,
                 header::ACCEPT,
-            ])
-            ;
+            ]);
         App::new()
             .app_data(app_state.clone())
             .wrap(cors)
             .wrap(Logger::default())
-            .service(index)
             .configure(auth::config)
             .configure(app::config)
     })

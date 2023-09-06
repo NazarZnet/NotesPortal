@@ -8,6 +8,18 @@ pub struct Props {
     pub route: Route,
 }
 
+/// The `AlertComponent` function renders an alert message with a
+/// button that links to different routes based on the `route` argument.
+///
+/// Arguments:
+///
+/// * `route`: The route when user will redirect after clicking the button
+///
+/// * `message`: The message that alert shows
+///
+/// Returns:
+///
+/// The `AlertComponent` returns a HTML element.
 #[function_component(AlertComponent)]
 pub fn alert_component(props: &Props) -> Html {
     html! {

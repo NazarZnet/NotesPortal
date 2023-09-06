@@ -3,12 +3,10 @@ use yew_router::prelude::*;
 
 use crate::components::alert::AlertComponent;
 use crate::components::auth::form::AuthorizationForm;
-use crate::components::auth::types::FormType;
-use crate::components::posts::PostsList;
-use crate::components::switchbutton::SwitchButton;
 use crate::components::auth::logout::LogOut;
+use crate::components::auth::types::FormType;
 use crate::components::posts::AddPostForm;
-
+use crate::components::posts::PostsList;
 
 #[derive(Clone, Routable, PartialEq)]
 pub enum Route {
@@ -26,6 +24,20 @@ pub enum Route {
     #[at("/404")]
     NotFound,
 }
+/// The `switch` function takes a `Route` enum as input and returns corresponding HTML based on the
+/// route.
+///
+/// Arguments:
+///
+/// * `routes`: The `routes` parameter is of type `Route`, which is an enum representing different
+/// routes in the application. The `switch` function takes this parameter and returns an HTML element
+/// based on the value of the `routes` parameter. The function uses pattern matching to determine which
+/// route is currently active and renders
+///
+/// Returns:
+///
+/// The `switch` function returns an `Html` element based on the value of the `routes` parameter. The
+/// returned `Html` element represents the corresponding view for the given route.
 
 pub fn switch(routes: Route) -> Html {
     match routes {
@@ -34,7 +46,11 @@ pub fn switch(routes: Route) -> Html {
                 <div class="container">
                     <div class="flex-container">
                         <h1>{ "Home" }</h1>
-                        <SwitchButton text={"Sign Up"} route={Route::SignUp}/>
+                        <button class="link">
+                            <Link<Route> to={Route::SignUp}>
+                                    { "Sign Up" }
+                            </Link<Route>>
+                        </button>
                     </div>
                 </div>
             }
@@ -62,16 +78,25 @@ pub fn switch(routes: Route) -> Html {
                 <div class="container">
                     <h1>{ "Posts" }</h1>
                     <div class="flex-container">
-                        <SwitchButton text={"Home"} route={Route::Home}/>
+                        <button class="link">
+                        <Link<Route> to={Route::Home}>
+                                { "Home" }
+                        </Link<Route>>
+                        </button>
+
                         <LogOut/>
 
-                        <SwitchButton text={"Add Post"} route={Route::AddPost}/>
+                        <button class="link">
+                        <Link<Route> to={Route::AddPost}>
+                                { "Add Post" }
+                        </Link<Route>>
+                        </button>
                     </div>
                     <PostsList/>
                 </div>
             }
         }
-        Route::AddPost=> {
+        Route::AddPost => {
             html! {
                 <div class="container">
                     <AddPostForm>
@@ -80,10 +105,10 @@ pub fn switch(routes: Route) -> Html {
                 </div>
             }
         }
-        Route::NotFound => html! { 
-            <div class="container">
-                <AlertComponent message="404! Page not found!" route={Route::Home}/>
-            </div>
-         },
+        Route::NotFound => html! {
+           <div class="container">
+               <AlertComponent message="404! Page not found!" route={Route::Home}/>
+           </div>
+        },
     }
 }

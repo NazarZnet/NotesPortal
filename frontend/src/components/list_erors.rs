@@ -7,6 +7,15 @@ pub struct Props {
     pub error: Option<ErrorResponse>,
 }
 
+/// The `ListErrors` components renders a list of error messages.
+///
+/// Arguments:
+///
+/// * `error`: Optinal argument that has type `ErrorResponse`. Shows only Auth and Validation erros
+///
+/// Returns:
+///
+/// The `ListErros` function returns a HTML element.
 #[function_component(ListErrors)]
 pub fn list_errors(props: &Props) -> Html {
     if let Some(error) = &props.error {
