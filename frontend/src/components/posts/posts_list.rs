@@ -73,16 +73,26 @@ pub fn posts_list() -> Html {
         )
     }
 
+    {
+        let api_request = api_request.clone();
+
+        use_effect_with_deps(
+           //run main api request to get updated posts list
+            move |_| {
+                api_request.run();
+            },
+            update_api_request.clone(),
+        )
+    }
+
     //main update callback that moves to children
     let update_post = {
-        let api_request = api_request.clone();
+        let update_api_request = update_api_request.clone();
         Callback::from(move |post: PostsUpdateForm| {
             //set new data for update request
             update_post_data.set(post);
             //run api update request
             update_api_request.run();
-            //run main api request to get updated posts list
-            api_request.run();
         })
     };
 

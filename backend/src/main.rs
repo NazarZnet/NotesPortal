@@ -7,15 +7,10 @@ mod schema;
 
 use actix_cors::Cors;
 use actix_web::{
-    get, http::header, middleware::Logger, web, App, HttpRequest, HttpResponse, HttpServer,
+    http::header, middleware::Logger, web, App,HttpServer
 };
-use tracing::instrument;
 
-#[get("/")]
-#[instrument(skip_all,name="Index page",fields(uri = %req.uri(), method= %req.method()))]
-pub async fn index(req: HttpRequest) -> Result<HttpResponse, errors::Error> {
-    Ok(HttpResponse::Ok().body("Helo"))
-}
+
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -46,7 +41,6 @@ async fn main() -> std::io::Result<()> {
             .app_data(app_state.clone())
             .wrap(cors)
             .wrap(Logger::default())
-            .service(index)
             .configure(auth::config)
             .configure(app::config)
     })

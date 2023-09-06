@@ -1,7 +1,7 @@
 use crate::db::{hash_password, User};
 
 use lazy_static::lazy_static;
-use regex::Regex;
+use onig::Regex;
 use time::OffsetDateTime;
 
 use crate::errors;
@@ -13,8 +13,9 @@ lazy_static! {
         Regex::new(r"^[a-zA-Z0-9]{5,}$").expect("Ivalid regular expression");
     //password must have minimum one number and minimum 8 symbols
     static ref PASSWORD_REGEX: Regex =
-        Regex::new(r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$").expect("Ivalid regular expression");
+        Regex::new(r#"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"#).expect("Ivalid regular expression");
 }
+
 #[derive(Debug)]
 pub struct Username(pub String);
 
