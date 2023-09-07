@@ -1,6 +1,6 @@
 use actix_web::{get, post, web, HttpResponse};
 
-use common::{PostsFormData, PostsUpdateForm};
+use common::{ApiResponse, PostsFormData, PostsUpdateForm};
 
 use crate::{app::AppState, auth::JwtMiddleware, db::db_get_posts};
 use crate::{
@@ -14,11 +14,11 @@ use tracing::instrument;
 #[instrument(skip_all, name = "Get all posts")]
 async fn get_posts(
     state: web::Data<AppState>,
-    _: JwtMiddleware,
+    user: JwtMiddleware,
 ) -> Result<HttpResponse, errors::Error> {
     let connection = state.connection.clone();
 
-    let db_posts = web::block(move || db_get_posts(&connection)).await??;
+    let db_posts = web::block(move || db_get_posts(user.user_id, &connection)).await??;
     Ok(HttpResponse::Ok().json(db_posts))
 }
 
@@ -40,12 +40,14 @@ async fn add_post(
 #[instrument(skip_all, name = "Update post's important field")]
 async fn update_posts(
     state: web::Data<AppState>,
-    _: JwtMiddleware,
+    user: JwtMiddleware,
     data: web::Json<PostsUpdateForm>,
 ) -> Result<HttpResponse, errors::Error> {
     let update_data = data.clone();
     let connection = state.connection.clone();
 
-    let db_post = web::block(move || db_update_post(update_data, &connection)).await??;
-    Ok(HttpResponse::Ok().json(db_post))
+    web::block(move || db_update_post(user.user_id, update_data, &connection)).await??;
+    Ok(HttpResponse::Ok().json(ApiResponse {
+        status: "success".to_owned(),
+    }))
 }

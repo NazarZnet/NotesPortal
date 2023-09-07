@@ -1,3 +1,4 @@
+use common::ApiResponse;
 use yew::prelude::*;
 use yew_hooks::use_async;
 use yew_router::prelude::use_navigator;
@@ -11,9 +12,9 @@ use reqwasm::http::Method;
 #[function_component(LogOut)]
 pub fn logout_button() -> Html {
     let api_request = {
-        use_async(
-            async move { request::<(), ()>(Method::GET, "/auth/logout".to_string(), None).await },
-        )
+        use_async(async move {
+            request::<(), ApiResponse>(Method::GET, "/auth/logout".to_string(), None).await
+        })
     };
     let onclick = {
         let api_request = api_request.clone();
@@ -27,6 +28,7 @@ pub fn logout_button() -> Html {
             move |request| {
                 if request.data.is_some() {
                     if let Some(navigatio) = &navigator {
+                        log::debug!("Log out");
                         navigatio.push(&Route::Home)
                     }
                 }

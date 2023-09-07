@@ -1,12 +1,18 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
+    important_posts (user_id, post_id) {
+        user_id -> Uuid,
+        post_id -> Uuid,
+    }
+}
+
+diesel::table! {
     posts (id) {
         id -> Uuid,
         user_id -> Uuid,
         title -> Text,
         description -> Nullable<Text>,
-        important -> Bool,
         created_at -> Timestamptz,
     }
 }
@@ -23,6 +29,8 @@ diesel::table! {
     }
 }
 
+diesel::joinable!(important_posts -> posts (post_id));
+diesel::joinable!(important_posts -> users (user_id));
 diesel::joinable!(posts -> users (user_id));
 
-diesel::allow_tables_to_appear_in_same_query!(posts, users,);
+diesel::allow_tables_to_appear_in_same_query!(important_posts, posts, users,);

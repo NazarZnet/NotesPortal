@@ -40,7 +40,6 @@ pub struct User {
 /// * `id`: The `id` property is of type `Uuid` and represents the unique identifier of the post.
 /// * `user_id`: The `user_id` property is of type `Uuid` and represents the unique identifier of the
 /// user who created the post.
-/// * `important`: A boolean value indicating whether the post is important or not.
 /// * `title`: The `title` property is a string that represents the title of the post.
 /// * `description`: The `description` property is an optional field that can contain a string value. It
 /// is marked as `Option<String>`, which means it can either be `Some(value)` where `value` is a string,
@@ -55,7 +54,6 @@ pub struct User {
 pub struct Post {
     pub id: Uuid,
     pub user_id: Uuid,
-    pub important: bool,
     pub title: String,
     pub description: Option<String>,
     #[serde(with = "time::serde::rfc3339")]

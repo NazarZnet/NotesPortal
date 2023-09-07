@@ -24,24 +24,3 @@ pub struct ResponseUser {
     pub created_at: OffsetDateTime,
     pub updated_at: OffsetDateTime,
 }
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-/// The `LoginResponse` struct represents the response received after a login request, containing the
-/// status, access token, and refresh token.
-///
-/// Properties:
-///
-/// * `status`: A string that represents the status of the login response. It could be "success" or
-/// "failure" or any other relevant status.
-/// * `access`: The `access` property is a string that represents the access token for the logged-in
-/// user. This token is typically used to authenticate and authorize the user to access protected
-/// resources or perform certain actions within the system.
-/// * `refresh`: The `refresh` property is a string that represents the refresh token. A refresh token
-/// is a special token that is used to obtain a new access token when the current access token expires.
-/// It is typically used in authentication systems to provide a seamless user experience without
-/// requiring the user to re-enter their credentials.
-pub struct LoginResponse {
-    pub status: String,
-    pub access: String,
-    pub refresh: String,
-}
