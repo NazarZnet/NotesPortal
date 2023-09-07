@@ -88,7 +88,6 @@ impl NewPost {
         Post {
             id: uuid::Uuid::new_v4(),
             user_id: self.user_id,
-            important: false,
             title: self.title.0.clone(),
             description: self.description.clone(),
             created_at: OffsetDateTime::now_utc(),
