@@ -70,5 +70,4 @@ Congratulation! You run the app! Go to *http://127.0.0.1:8080/* and see the app!
 | /auth/logout   	| GET  	| Log out user. Delete access and refresh token                                                                  	|
 | /posts         	| GET  	| Get all posts for current user. Authorization required!                                                        	|
 | /posts         	| POST 	| Create new post, send tittle and description in JSON body. Authorization required!                             	|
-| /posts/updated 	| POST 	| Make the post important or not, send post's id and important(true/false) in JSON body. Authorization required! 	|
-|                	|      	|                                                                                                                	|
+| /posts/update 	| POST 	| Make the post important or not, send post's id and important(true/false) in JSON body. Authorization required! 	|
