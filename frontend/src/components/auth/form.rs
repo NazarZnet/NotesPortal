@@ -80,7 +80,7 @@ pub fn authorization_form(props: &Props) -> Html {
     html! {
         <div class="form_container">
             {
-                if let Some(_data)=&api_request.data{
+                if api_request.data.is_some(){
                     html!(
                         for props.children.clone()
                     )

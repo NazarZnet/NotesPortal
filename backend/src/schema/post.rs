@@ -21,7 +21,7 @@ impl Title {
     /// string. If the `title` is empty, it returns `Err(errors::Error::new(None,Some("Ivalid post's
     /// title! It can not be
     fn parse(title: &str) -> Result<Title, errors::Error> {
-        if title.trim().len() == 0 {
+        if title.trim().is_empty() {
             return Err(errors::Error::new(
                 None,
                 Some("Ivalid post's title! It can not be empty!".to_string()),

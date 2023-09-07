@@ -1,6 +1,6 @@
 use actix_web::{get, post, web, HttpResponse};
 
-use common::{PostsFormData, PostsUpdateForm};
+use common::{ApiResponse, PostsFormData, PostsUpdateForm};
 
 use crate::{app::AppState, auth::JwtMiddleware, db::db_get_posts};
 use crate::{
@@ -18,7 +18,7 @@ async fn get_posts(
 ) -> Result<HttpResponse, errors::Error> {
     let connection = state.connection.clone();
 
-    let db_posts = web::block(move || db_get_posts(user.user_id,&connection)).await??;
+    let db_posts = web::block(move || db_get_posts(user.user_id, &connection)).await??;
     Ok(HttpResponse::Ok().json(db_posts))
 }
 
@@ -46,6 +46,8 @@ async fn update_posts(
     let update_data = data.clone();
     let connection = state.connection.clone();
 
-    let db_post = web::block(move || db_update_post(user.user_id,update_data, &connection)).await??;
-    Ok(HttpResponse::Ok().json(db_post))
+    web::block(move || db_update_post(user.user_id, update_data, &connection)).await??;
+    Ok(HttpResponse::Ok().json(ApiResponse {
+        status: "success".to_owned(),
+    }))
 }

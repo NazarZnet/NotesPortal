@@ -77,7 +77,7 @@ pub fn posts_list() -> Html {
         let api_request = api_request.clone();
 
         use_effect_with_deps(
-           //run main api request to get updated posts list
+            //run main api request to get updated posts list
             move |_| {
                 api_request.run();
             },

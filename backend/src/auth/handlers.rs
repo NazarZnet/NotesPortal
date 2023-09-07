@@ -13,7 +13,7 @@ use crate::{
         user::NewUser,
     },
 };
-use common::UserFormData;
+use common::{ApiResponse, UserFormData};
 use serde_json::json;
 use time::Duration;
 use tracing::instrument;
@@ -99,7 +99,7 @@ async fn refresh_auth(
 }
 
 #[get("/auth/logout")]
-#[instrument(name = "User logout")]
+#[instrument(name = "User logout", skip_all)]
 async fn logout_handler(_: JwtMiddleware) -> impl Responder {
     let refresh_cookie = Cookie::build("refresh_token", "")
         .path("/")
@@ -116,5 +116,7 @@ async fn logout_handler(_: JwtMiddleware) -> impl Responder {
     HttpResponse::Ok()
         .cookie(access_cookie)
         .cookie(refresh_cookie)
-        .json(json!({"status": "success"}))
+        .json(ApiResponse {
+            status: "success".to_owned(),
+        })
 }

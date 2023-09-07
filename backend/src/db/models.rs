@@ -59,7 +59,3 @@ pub struct Post {
     #[serde(with = "time::serde::rfc3339")]
     pub created_at: OffsetDateTime,
 }
-
-
-
-
