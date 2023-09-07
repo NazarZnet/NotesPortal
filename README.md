@@ -27,6 +27,13 @@ cd ./configuration
 
 code config.yaml
 ```
+Check if everything correct and run migrations
+```
+cargo install diesel_cli --no-default-features --features postgres
+diesel setup
+diesel migration run
+```
+
 Now you can run the app. Go back to  the `backend` folder and run the server.
 
 ```
